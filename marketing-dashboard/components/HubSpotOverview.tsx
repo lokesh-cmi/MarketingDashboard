@@ -1,12 +1,44 @@
 'use client';
 
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { contactLifecycleData, dealsMetrics } from '@/lib/mock-data/hubspotData';
 
 export default function HubSpotOverview() {
+  const [contactData, setContactData] = useState<any[]>([]);
+  const [dealsData, setDealsData] = useState({ totalDeals: 0, totalAmount: '$0' });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/hubspot');
+        const result = await response.json();
+        
+        if (result.data) {
+          setContactData(result.data.contactBreakdown || []);
+          setDealsData(result.data.deals || { totalDeals: 0, totalAmount: '$0' });
+        }
+      } catch (error) {
+        console.error('Error fetching HubSpot data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
@@ -29,11 +61,11 @@ export default function HubSpotOverview() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-gray-500 mb-1">(COUNT) DEALS</div>
-            <div className="text-2xl font-semibold text-gray-900">{dealsMetrics.totalDeals}</div>
+            <div className="text-2xl font-semibold text-gray-900">{dealsData.totalDeals}</div>
           </div>
           <div>
             <div className="text-sm text-gray-500 mb-1">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-            <div className="text-2xl font-semibold text-gray-900">{dealsMetrics.totalAmount}</div>
+            <div className="text-2xl font-semibold text-gray-900">{dealsData.totalAmount}</div>
           </div>
         </div>
       </div>
@@ -57,7 +89,7 @@ export default function HubSpotOverview() {
 
         <ResponsiveContainer width="100%" height={200}>
           <BarChart 
-            data={contactLifecycleData} 
+            data={contactData} 
             layout="vertical"
             margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
           >

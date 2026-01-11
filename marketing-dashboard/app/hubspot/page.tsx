@@ -1,17 +1,38 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { totalDealsSourceData, wonDealsSourceData, dealsBreakdown } from '@/lib/mock-data/hubspotDetailData';
-import { dealsMetrics } from '@/lib/mock-data/hubspotData';
 
 export default function HubSpotPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'seo';
   const [dateRange, setDateRange] = useState('Last 30 Days');
+  const [pipelineData, setPipelineData] = useState<any[]>([]);
+  const [dealsData, setDealsData] = useState({ totalDeals: 0, totalAmount: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/hubspot/detail');
+        const result = await response.json();
+        
+        if (result.data) {
+          setPipelineData(result.data.pipelineData || []);
+          setDealsData(result.data.summary || { totalDeals: 0, totalAmount: 0 });
+        }
+      } catch (error) {
+        console.error('Error fetching HubSpot detail:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const formatCurrency = (value: number) => {
     if (value >= 1000000) {
@@ -21,6 +42,16 @@ export default function HubSpotPage() {
     }
     return `€${value.toFixed(2)}`;
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -64,11 +95,11 @@ export default function HubSpotPage() {
           <div className="grid grid-cols-2 gap-8 mb-8">
             <div className="text-center">
               <div className="text-sm text-gray-600 mb-2">(COUNT) DEALS</div>
-              <div className="text-5xl font-bold text-cyan-600">{dealsMetrics.totalDeals}</div>
+              <div className="text-5xl font-bold text-cyan-600">{dealsData.totalDeals}</div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-600 mb-2">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-              <div className="text-3xl font-bold text-cyan-600">{dealsMetrics.totalAmount}</div>
+              <div className="text-3xl font-bold text-cyan-600">{formatCurrency(dealsData.totalAmount)}</div>
             </div>
           </div>
 
@@ -144,7 +175,7 @@ export default function HubSpotPage() {
             
             <ResponsiveContainer width="100%" height={300}>
               <BarChart 
-                data={totalDealsSourceData}
+                data={pipelineData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -179,7 +210,7 @@ export default function HubSpotPage() {
             
             <ResponsiveContainer width="100%" height={300}>
               <BarChart 
-                data={wonDealsSourceData}
+                data={pipelineData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />

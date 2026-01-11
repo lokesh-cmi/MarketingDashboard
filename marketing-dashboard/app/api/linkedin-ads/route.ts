@@ -25,7 +25,7 @@ export async function GET() {
 
     // Transform data for chart
     const chartData = linkedInAds.reverse().map((item) => ({
-      day: item.date.toISOString().split('T')[0],
+      day: new Date(item.date).getDate().toString(),
       clicks: item.clicks,
       conversions: item.conversions,
       spend: item.spend,
@@ -43,7 +43,7 @@ export async function GET() {
       summary: {
         totalClicks,
         totalConversions,
-        totalSpend: totalSpend.toFixed(2),
+        totalSpend,
         totalImpressions,
         averageCTR: ((totalClicks / totalImpressions) * 100).toFixed(2),
         conversionRate: ((totalConversions / totalClicks) * 100).toFixed(2),

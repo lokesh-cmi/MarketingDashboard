@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchDetailedAnalyticsData } from '@/lib/googleAnalyticsDetailed';
+import { getCachedData, setCachedData } from '@/lib/database/cache';
 
 export async function GET(request: NextRequest) {
   try {
+    const cacheKey = 'google-analytics-detailed';
+    
+    // Try to get cached data first
+    const cached = await getCachedData<any>(cacheKey);
+    if (cached) {
+      return NextResponse.json({ 
+        ...cached, 
+        source: 'cache' 
+      });
+    }
+
     const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
     if (!propertyId) {
@@ -14,7 +26,13 @@ export async function GET(request: NextRequest) {
 
     const data = await fetchDetailedAnalyticsData(propertyId);
 
-    return NextResponse.json(data);
+    // Cache for 1 hour (3600 seconds)
+    await setCachedData(cacheKey, data, 3600);
+
+    return NextResponse.json({ 
+      ...data, 
+      source: 'database' 
+    });
   } catch (error) {
     console.error('Error in Google Analytics Detailed API route:', error);
     return NextResponse.json(

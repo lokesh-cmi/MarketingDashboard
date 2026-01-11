@@ -1,16 +1,52 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { googleAdsOverviewData } from '@/lib/mock-data/googleAdsData';
 
 export default function GoogleAdsOverview() {
-  const totalClicks = googleAdsOverviewData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalCost = googleAdsOverviewData.reduce((sum, item) => sum + item.cost, 0);
-  const totalConversions = googleAdsOverviewData.reduce((sum, item) => sum + item.conversions, 0);
-  const avgCPC = totalCost / totalClicks;
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState({
+    totalClicks: 0,
+    totalCost: 0,
+    totalConversions: 0,
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/google-ads');
+        const result = await response.json();
+        
+        if (result.data) {
+          setData(result.data.chartData || []);
+          if (result.data.summary) {
+            setSummary(result.data.summary);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching Google Ads:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  const avgCPC = summary.totalClicks > 0 ? summary.totalCost / summary.totalClicks : 0;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -28,7 +64,7 @@ export default function GoogleAdsOverview() {
       <div className="grid grid-cols-4 gap-6 mb-6">
         <div>
           <div className="text-sm text-gray-500 mb-1">Total Clicks</div>
-          <div className="text-2xl font-semibold text-gray-900">{totalClicks}</div>
+          <div className="text-2xl font-semibold text-gray-900">{summary.totalClicks}</div>
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">Avg CPC</div>
@@ -36,16 +72,16 @@ export default function GoogleAdsOverview() {
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">Total Cost</div>
-          <div className="text-2xl font-semibold text-gray-900">${totalCost.toLocaleString()}</div>
+          <div className="text-2xl font-semibold text-gray-900">${summary.totalCost.toLocaleString()}</div>
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">Conversions</div>
-          <div className="text-2xl font-semibold text-gray-900">{totalConversions}</div>
+          <div className="text-2xl font-semibold text-gray-900">{summary.totalConversions}</div>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={googleAdsOverviewData}>
+        <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
           <YAxis tick={{ fontSize: 12 }} stroke="#999" />
