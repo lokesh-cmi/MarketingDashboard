@@ -66,11 +66,9 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center h-96">
-            <div className="text-gray-500 text-lg">Loading analytics data...</div>
-          </div>
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-gray-500 text-lg">Loading analytics data...</div>
         </div>
       </div>
     );
@@ -78,11 +76,9 @@ export default function AnalyticsPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center h-96">
-            <div className="text-red-500 text-lg">Error: {error || 'Failed to load data'}</div>
-          </div>
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-red-500 text-lg">Error: {error || 'Failed to load data'}</div>
         </div>
       </div>
     );
@@ -95,13 +91,13 @@ export default function AnalyticsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-8">
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="p-8">
         {/* Header */}
         <div className="mb-8">
           <Link 
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard

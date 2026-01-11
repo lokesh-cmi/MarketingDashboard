@@ -303,6 +303,70 @@ Create a mock data for Linkedin Ads overview and provide a graph. Add view more 
 
 ---
 
+## Prompt 9: Apply Header and Background to All Pages
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+The header and background should be applied same for the dashboard and all the routes
+```
+
+**Result**:
+- Updated `/app/layout.tsx` - Global layout with header and background
+  - **Animated Gradient Background**: Dark purple/blue gradient with animated pulsing effects
+    - Three large gradient orbs with different colors (purple, pink, cyan, blue)
+    - Each orb pulses at different timing (0s, 1s, 2s delays)
+    - Uses blur-3xl for soft glow effect
+  - **Header Section**:
+    - XMetrics branding with custom logo (𝕏Metrics)
+    - Two dropdown filters: "Last 30 Days" and "Quarterly"
+    - Professional white text on dark gradient background
+    - Fixed at top of all pages
+  - **Main Content Container**:
+    - Centered with max-w-7xl constraint
+    - Proper spacing and padding
+    - All page content wrapped in white rounded cards
+
+- Updated `/app/page.tsx` - Landing page layout
+  - Wrapped content in white rounded-2xl card
+  - Removed standalone background (now handled by layout)
+  - Updated "Overview" heading styling
+  - Maintains all existing functionality with new visual container
+
+- Updated All Route Pages:
+  - `/app/analytics/page.tsx` - Google Analytics detailed view
+  - `/app/search-console/page.tsx` - Search Console detailed view
+  - `/app/semrush/page.tsx` - SEMrush detailed view
+  - `/app/hubspot/page.tsx` - HubSpot detailed view
+  - `/app/linkedin-ads/page.tsx` - LinkedIn Ads detailed view
+  - `/app/google-ads/page.tsx` - Google Ads detailed view
+  - All wrapped in white rounded-2xl cards
+  - Updated "Back to Dashboard" links to purple-600 color
+  - Removed individual page backgrounds (min-h-screen bg-gray-50)
+  - Consistent padding and spacing
+
+- Updated `/app/globals.css`
+  - Added pulse animation keyframes
+  - Custom animation timing for gradient effects
+  - Scale and opacity transitions for smooth animations
+
+**Design Improvements**:
+- **Consistent Visual Identity**: All pages share same header and background
+- **Professional Aesthetic**: Dark gradient background with white content cards
+- **Enhanced User Experience**: Smooth animations and visual hierarchy
+- **Brand Cohesion**: XMetrics branding visible across all pages
+- **Accessibility**: High contrast between dark background and white cards
+- **Responsive**: Layout adapts to different screen sizes
+
+**Technical Details**:
+- Background uses CSS gradients and blur effects
+- Animation delays create staggered pulsing effect
+- Layout wrapper ensures consistent structure
+- White cards pop against dark background
+- Purple accent colors for links and interactive elements
+
+---
+
 ## Project Summary
 
 ### Tech Stack
