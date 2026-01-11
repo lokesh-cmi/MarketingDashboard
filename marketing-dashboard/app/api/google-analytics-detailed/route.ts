@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchDetailedAnalyticsData } from '@/lib/googleAnalyticsDetailed';
+import { fetchDetailedAnalyticsDataByDays } from '@/lib/googleAnalyticsDetailed';
 import { getCachedData, setCachedData } from '@/lib/database/cache';
 
 export async function GET(request: NextRequest) {
   try {
-    const cacheKey = 'google-analytics-detailed';
+    const { searchParams } = new URL(request.url);
+    const days = parseInt(searchParams.get('days') || '30');
     
-    // Try to get cached data first
+    console.log(`[API /google-analytics-detailed] Request for ${days} days`);
+    
+    const cacheKey = `google-analytics-detailed-${days}`;
+
     const cached = await getCachedData<any>(cacheKey);
     if (cached) {
-      return NextResponse.json({ 
-        ...cached, 
-        source: 'cache' 
-      });
+      console.log(`[API /google-analytics-detailed] Returning cached data for ${days} days`);
+      return NextResponse.json({ ...cached, source: 'cache' });
     }
+
+    console.log(`[API /google-analytics-detailed] Cache miss, fetching from Google API`);
 
     const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
@@ -24,15 +28,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await fetchDetailedAnalyticsData(propertyId);
+    const data = await fetchDetailedAnalyticsDataByDays(propertyId, days);
 
-    // Cache for 1 hour (3600 seconds)
-    await setCachedData(cacheKey, data, 3600);
+    await setCachedData(cacheKey, data, 3600); // Cache for 1 hour
 
-    return NextResponse.json({ 
-      ...data, 
-      source: 'database' 
-    });
+    return NextResponse.json({ ...data, source: 'google-api' });
   } catch (error) {
     console.error('Error in Google Analytics Detailed API route:', error);
     return NextResponse.json(

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 
 interface SearchConsoleData {
   date: string;
@@ -42,6 +43,7 @@ interface SearchConsoleSummary {
 export default function SearchConsolePage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'seo';
+  const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<SearchConsoleSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,13 +52,20 @@ export default function SearchConsolePage() {
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await fetch('/api/search-console');
+        const days = getDateRangeInDays();
+        console.log(`[SearchConsolePage] Fetching data for ${dateRange} (${days} days)`);
+        
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/search-console?days=${days}&t=${timestamp}`, {
+          cache: 'no-store',
+        });
         
         if (!response.ok) {
           throw new Error('Failed to fetch search console data');
         }
         
         const searchData = await response.json();
+        console.log(`[SearchConsolePage] Data source: ${searchData.source}`);
         setData(searchData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -67,7 +76,7 @@ export default function SearchConsolePage() {
     }
 
     fetchData();
-  }, []);
+  }, [dateRange, getDateRangeInDays]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) {

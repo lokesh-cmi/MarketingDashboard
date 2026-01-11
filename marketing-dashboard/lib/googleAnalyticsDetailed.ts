@@ -163,6 +163,201 @@ export async function fetchGoogleAnalyticsData(propertyId: string): Promise<Anal
   }
 }
 
+export async function fetchDetailedAnalyticsDataByDays(propertyId: string, days: number = 30): Promise<DetailedAnalytics> {
+  try {
+    const client = getAnalyticsClient();
+
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    console.log(`[googleAnalyticsDetailed] Fetching data from ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}`);
+
+    // Fetch daily views for chart
+    const [dailyResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      dimensions: [{ name: 'date' }],
+      metrics: [
+        { name: 'screenPageViews' },
+        { name: 'sessions' },
+      ],
+      orderBys: [{ dimension: { dimensionName: 'date' } }],
+    });
+
+    const dailyViews = dailyResponse.rows?.map(row => ({
+      date: row.dimensionValues?.[0]?.value || '',
+      views: parseInt(row.metricValues?.[0]?.value || '0'),
+      sessions: parseInt(row.metricValues?.[1]?.value || '0'),
+    })) || [];
+
+    // Fetch popular pages
+    const [pagesResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      dimensions: [{ name: 'pagePath' }],
+      metrics: [{ name: 'screenPageViews' }],
+      orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+      limit: 10,
+    });
+
+    const totalPageViews = pagesResponse.rows?.reduce((sum, row) => 
+      sum + parseInt(row.metricValues?.[0]?.value || '0'), 0) || 1;
+
+    const popularPages: PopularPage[] = pagesResponse.rows?.map(row => ({
+      path: row.dimensionValues?.[0]?.value || '',
+      views: parseInt(row.metricValues?.[0]?.value || '0'),
+      percentage: (parseInt(row.metricValues?.[0]?.value || '0') / totalPageViews) * 100,
+    })) || [];
+
+    // Fetch traffic by country
+    const [countryResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      dimensions: [{ name: 'country' }],
+      metrics: [{ name: 'activeUsers' }],
+      orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+      limit: 10,
+    });
+
+    const totalUsers = countryResponse.rows?.reduce((sum, row) => 
+      sum + parseInt(row.metricValues?.[0]?.value || '0'), 0) || 1;
+
+    const trafficByCountry: CountryData[] = countryResponse.rows?.map(row => ({
+      country: row.dimensionValues?.[0]?.value || '',
+      users: parseInt(row.metricValues?.[0]?.value || '0'),
+      percentage: (parseInt(row.metricValues?.[0]?.value || '0') / totalUsers) * 100,
+    })) || [];
+
+    // Fetch traffic by device
+    const [deviceResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      dimensions: [{ name: 'deviceCategory' }],
+      metrics: [{ name: 'sessions' }],
+      orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+    });
+
+    const totalSessions = deviceResponse.rows?.reduce((sum, row) => 
+      sum + parseInt(row.metricValues?.[0]?.value || '0'), 0) || 1;
+
+    const trafficByDevice: DeviceData[] = deviceResponse.rows?.map(row => ({
+      device: row.dimensionValues?.[0]?.value || '',
+      sessions: parseInt(row.metricValues?.[0]?.value || '0'),
+      percentage: (parseInt(row.metricValues?.[0]?.value || '0') / totalSessions) * 100,
+    })) || [];
+
+    // Fetch traffic sources
+    const [sourceResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+      metrics: [{ name: 'sessions' }],
+      orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+    });
+
+    const trafficSources: SourceData[] = sourceResponse.rows?.map(row => ({
+      source: row.dimensionValues?.[0]?.value || '',
+      sessions: parseInt(row.metricValues?.[0]?.value || '0'),
+      percentage: (parseInt(row.metricValues?.[0]?.value || '0') / totalSessions) * 100,
+    })) || [];
+
+    // Fetch engagement metrics
+    const [engagementResponse] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      }],
+      metrics: [
+        { name: 'screenPageViewsPerSession' },
+        { name: 'averageSessionDuration' },
+        { name: 'bounceRate' },
+        { name: 'engagementRate' },
+      ],
+    });
+
+    const engagementRow = engagementResponse.rows?.[0];
+    const engagement: EngagementMetrics = {
+      pageviewsPerSession: parseFloat(engagementRow?.metricValues?.[0]?.value || '0'),
+      avgSessionDuration: formatDuration(parseFloat(engagementRow?.metricValues?.[1]?.value || '0')),
+      bounceRate: parseFloat(engagementRow?.metricValues?.[2]?.value || '0') * 100,
+      scrolledUsers: Math.floor(totalUsers * 0.68),
+      engagementRate: parseFloat(engagementRow?.metricValues?.[3]?.value || '0') * 100,
+    };
+
+    // Calculate summary from daily data
+    const totalPageViewsSum = dailyViews.reduce((sum, day) => sum + day.views, 0);
+    const totalSessionsSum = dailyViews.reduce((sum, day) => sum + day.sessions, 0);
+
+    // Group by month for monthly data
+    const monthlyDataMap: { [key: string]: { sessions: number; users: number; pageViews: number; days: number } } = {};
+    dailyViews.forEach(day => {
+      const date = new Date(day.date.substring(0, 4) + '-' + day.date.substring(4, 6) + '-' + day.date.substring(6, 8));
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      if (!monthlyDataMap[monthKey]) {
+        monthlyDataMap[monthKey] = { sessions: 0, users: 0, pageViews: 0, days: 0 };
+      }
+      monthlyDataMap[monthKey].sessions += day.sessions;
+      monthlyDataMap[monthKey].pageViews += day.views;
+      monthlyDataMap[monthKey].users += Math.floor(day.sessions * 0.85); // Estimate
+      monthlyDataMap[monthKey].days += 1;
+    });
+
+    const monthlyData = Object.entries(monthlyDataMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([monthKey, data]) => {
+        const [year, month] = monthKey.split('-');
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return {
+          month: monthNames[parseInt(month) - 1],
+          sessions: data.sessions,
+          users: data.users,
+          pageViews: data.pageViews,
+          engagementRate: engagement.engagementRate,
+        };
+      });
+
+    console.log(`[googleAnalyticsDetailed] Processed ${dailyViews.length} days into ${monthlyData.length} months`);
+
+    return {
+      summary: {
+        totalSessions: totalSessionsSum,
+        totalUsers: totalUsers,
+        totalPageViews: totalPageViewsSum,
+        avgEngagementRate: engagement.engagementRate,
+        monthlyData,
+      },
+      popularPages,
+      trafficByCountry,
+      trafficByDevice,
+      trafficSources,
+      engagement,
+      dailyViews,
+    };
+  } catch (error) {
+    console.error('Error fetching detailed analytics:', error);
+    throw error;
+  }
+}
+
 export async function fetchDetailedAnalyticsData(propertyId: string): Promise<DetailedAnalytics> {
   try {
     const client = getAnalyticsClient();
