@@ -36,6 +36,124 @@ export interface SearchConsoleSummary {
   dailyData: SearchConsoleData[];
 }
 
+export interface QueryData {
+  query: string;
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+}
+
+export interface PageData {
+  page: string;
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+}
+
+/**
+ * Fetch top queries from Google Search Console
+ * @param siteUrl - Search Console property URL
+ * @param days - Number of days to fetch data for
+ * @param limit - Number of top queries to return
+ */
+export async function fetchTopQueries(siteUrl: string, days: number = 30, limit: number = 10): Promise<QueryData[]> {
+  try {
+    const client = getSearchConsoleClient();
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+    
+    console.log(`[searchConsole] Fetching top ${limit} queries`);
+    
+    const response = await client.searchanalytics.query({
+      siteUrl: siteUrl,
+      requestBody: {
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        dimensions: ['query'],
+        rowLimit: limit,
+        dataState: 'final',
+      },
+    });
+    
+    const queries: QueryData[] = [];
+    
+    if (response.data.rows) {
+      response.data.rows.forEach((row: any) => {
+        queries.push({
+          query: row.keys[0] || '',
+          clicks: row.clicks || 0,
+          impressions: row.impressions || 0,
+          ctr: (row.ctr || 0) * 100,
+          position: row.position || 0,
+        });
+      });
+    }
+    
+    console.log(`[searchConsole] Found ${queries.length} queries`);
+    return queries;
+  } catch (error) {
+    console.error('Error fetching top queries:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch top pages from Google Search Console
+ * @param siteUrl - Search Console property URL
+ * @param days - Number of days to fetch data for
+ * @param limit - Number of top pages to return
+ */
+export async function fetchTopPages(siteUrl: string, days: number = 30, limit: number = 10): Promise<PageData[]> {
+  try {
+    const client = getSearchConsoleClient();
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+    
+    console.log(`[searchConsole] Fetching top ${limit} pages`);
+    
+    const response = await client.searchanalytics.query({
+      siteUrl: siteUrl,
+      requestBody: {
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        dimensions: ['page'],
+        rowLimit: limit,
+        dataState: 'final',
+      },
+    });
+    
+    const pages: PageData[] = [];
+    
+    if (response.data.rows) {
+      response.data.rows.forEach((row: any) => {
+        pages.push({
+          page: row.keys[0] || '',
+          clicks: row.clicks || 0,
+          impressions: row.impressions || 0,
+          ctr: (row.ctr || 0) * 100,
+          position: row.position || 0,
+        });
+      });
+    }
+    
+    console.log(`[searchConsole] Found ${pages.length} pages`);
+    return pages;
+  } catch (error) {
+    console.error('Error fetching top pages:', error);
+    throw error;
+  }
+}
+
 /**
  * Fetch Google Search Console data for a specific number of days
  * @param siteUrl - Search Console property URL (e.g., https://www.example.com/)

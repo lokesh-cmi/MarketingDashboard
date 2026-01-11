@@ -4,6 +4,7 @@ import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { linkedInAdsOverviewData } from '../lib/mock-data/linkedinAdsData';
 import { googleAdsOverviewData } from '../lib/mock-data/googleAdsData';
 import { topKeywords, siteHealthData } from '../lib/mock-data/semrushData';
+import { contactLifecycleData } from '../lib/mock-data/hubspotData';
 import {
   linkedInMetrics,
   linkedInTimeSeriesData,
@@ -193,6 +194,44 @@ async function main() {
         engagement: item.engagement,
         retweets: item.retweets,
         likes: item.likes,
+      },
+    });
+  }
+
+  // Seed HubSpot Contact data
+  console.log('Seeding HubSpot Contacts...');
+  for (const contact of contactLifecycleData) {
+    await prisma.hubSpotContact.create({
+      data: {
+        stage: contact.stage,
+        count: contact.total,
+      },
+    });
+  }
+
+  // Seed HubSpot Deals data
+  console.log('Seeding HubSpot Deals...');
+  const dealsToday = new Date();
+  const dealsSources = [
+    { source: 'Organic Search', count: 12, amount: 180000 },
+    { source: 'Paid Search', count: 8, amount: 120000 },
+    { source: 'Social Media', count: 15, amount: 225000 },
+    { source: 'Direct Traffic', count: 10, amount: 150000 },
+    { source: 'Email Marketing', count: 18, amount: 270000 },
+    { source: 'Referral', count: 7, amount: 105000 },
+  ];
+
+  for (let i = 0; i < dealsSources.length; i++) {
+    const deal = dealsSources[i];
+    const date = new Date(dealsToday);
+    date.setDate(date.getDate() - (dealsSources.length - i));
+    
+    await prisma.hubSpotDeals.create({
+      data: {
+        date: date,
+        source: deal.source,
+        count: deal.count,
+        amount: deal.amount,
       },
     });
   }

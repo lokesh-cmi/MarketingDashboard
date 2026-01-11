@@ -122,7 +122,6 @@ const postToClickData = [
 export default function LinkedInAdsPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'paid-campaigns';
-  const [dateRange, setDateRange] = useState('Last 30 Days');
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -137,22 +136,9 @@ export default function LinkedInAdsPage() {
             Back to Dashboard
           </Link>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">LinkedIn Ads Overview</h1>
-              <p className="text-gray-600 mt-2">📊 Analyze how owned and earned LinkedIn activities stack up against paid</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <select 
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-              >
-                <option>Last 7 Days</option>
-                <option>Last 30 Days</option>
-                <option>Last 90 Days</option>
-              </select>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">LinkedIn Ads Overview</h1>
+            <p className="text-gray-600 mt-2">📊 Analyze how owned and earned LinkedIn activities stack up against paid</p>
           </div>
         </div>
 

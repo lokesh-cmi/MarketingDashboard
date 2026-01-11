@@ -38,8 +38,10 @@ export default function RootLayout({
               <div className="absolute top-1/4 left-1/2 w-1/2 h-1/2 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
             </div>
 
-            {/* Header */}
-            <Header />
+            {/* Sticky Header */}
+            <div className="sticky top-0 z-50">
+              <Header />
+            </div>
 
             {/* Main Content */}
             <main className="relative z-10 px-8 pb-8">

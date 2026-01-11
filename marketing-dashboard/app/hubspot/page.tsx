@@ -10,7 +10,6 @@ import { dealsBreakdown as mockDealsBreakdown } from '@/lib/mock-data/hubspotDet
 export default function HubSpotPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'seo';
-  const [dateRange, setDateRange] = useState('Last 30 Days');
   const [pipelineData, setPipelineData] = useState<any[]>([]);
   const [dealsData, setDealsData] = useState({ totalDeals: 0, totalAmount: 0 });
   const [loading, setLoading] = useState(true);
@@ -68,22 +67,9 @@ export default function HubSpotPage() {
             Back to Dashboard
           </Link>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">HubSpot Dashboard</h1>
-              <p className="text-gray-600 mt-2">Marketing Performance Overview</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <select 
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-              >
-                <option>Last 7 Days</option>
-                <option>Last 30 Days</option>
-                <option>Last 90 Days</option>
-              </select>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">HubSpot Dashboard</h1>
+            <p className="text-gray-600 mt-2">Marketing Performance Overview</p>
           </div>
         </div>
 
