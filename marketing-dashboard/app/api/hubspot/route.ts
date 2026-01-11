@@ -2,20 +2,25 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/database/client';
 import { getCachedData, setCachedData } from '@/lib/database/cache';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const cacheKey = 'hubspot-overview';
+    const { searchParams } = new URL(request.url);
+    const days = parseInt(searchParams.get('days') || '30');
+    
+    console.log(`[API /hubspot] Request for ${days} days`);
+    
+    const cacheKey = `hubspot-overview-${days}`;
     
     // Try cache first
     const cached = await getCachedData<any>(cacheKey);
     if (cached) {
-      return NextResponse.json({ 
-        data: cached, 
-        source: 'cache' 
-      });
+      console.log(`[API /hubspot] Returning cached data for ${days} days`);
+      return NextResponse.json(cached);
     }
 
-    // Fetch from database
+    console.log(`[API /hubspot] Cache miss, fetching from database`);
+
+    // Fetch from database (HubSpot data is not date-filtered in this simple implementation)
     const contacts = await prisma.hubSpotContact.findMany();
     const deals = await prisma.hubSpotDeals.findMany({
       orderBy: {
@@ -28,33 +33,24 @@ export async function GET() {
       stage: c.stage,
       digital: Math.floor(c.count * 0.7),
       events: Math.floor(c.count * 0.3),
-    })) : [
-      { stage: 'Subscriber', digital: 8750, events: 3750 },
-      { stage: 'Lead', digital: 5740, events: 2460 },
-      { stage: 'MQL', digital: 2870, events: 1230 },
-      { stage: 'SQL', digital: 1435, events: 615 },
-      { stage: 'Opportunity', digital: 574, events: 246 },
-      { stage: 'Customer', digital: 287, events: 123 },
-    ];
+    })) : [];
 
-    const totalDeals = deals.reduce((sum, deal) => sum + deal.count, 0) || 156;
-    const totalAmount = deals.reduce((sum, deal) => sum + deal.amount, 0) || 2847500;
+    const totalDeals = deals.reduce((sum, d) => sum + d.count, 0);
+    const totalAmount = deals.reduce((sum, d) => sum + d.amount, 0);
 
     const response = {
-      contactBreakdown,
-      deals: {
+      dealsMetrics: {
         totalDeals,
-        totalAmount: `$${(totalAmount / 1000).toFixed(0)}K`,
+        totalAmount: `€${(totalAmount / 1000000).toFixed(1)}M`,
       },
+      contactLifecycleData: contactBreakdown,
+      source: 'database'
     };
 
     // Cache for 2 hours
     await setCachedData(cacheKey, response, 7200);
 
-    return NextResponse.json({ 
-      data: response, 
-      source: 'database' 
-    });
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching HubSpot data:', error);
     return NextResponse.json(

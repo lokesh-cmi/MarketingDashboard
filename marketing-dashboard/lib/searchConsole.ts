@@ -37,6 +37,83 @@ export interface SearchConsoleSummary {
 }
 
 /**
+ * Fetch Google Search Console data for a specific number of days
+ * @param siteUrl - Search Console property URL (e.g., https://www.example.com/)
+ * @param days - Number of days to fetch data for
+ */
+export async function fetchSearchConsoleDataByDays(siteUrl: string, days: number = 30): Promise<SearchConsoleSummary> {
+  try {
+    const client = getSearchConsoleClient();
+
+    // Calculate date range
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Format dates as YYYY-MM-DD
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+    console.log(`[searchConsole] Fetching data from ${formatDate(startDate)} to ${formatDate(endDate)}`);
+
+    const response = await client.searchanalytics.query({
+      siteUrl: siteUrl,
+      requestBody: {
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        dimensions: ['date'],
+        rowLimit: 1000,
+        dataState: 'final',
+      },
+    });
+
+    const dailyData: SearchConsoleData[] = [];
+    let totalImpressions = 0;
+    let totalClicks = 0;
+    let totalCTR = 0;
+    let totalPosition = 0;
+    let rowCount = 0;
+
+    // Process the response
+    if (response.data.rows) {
+      response.data.rows.forEach((row: any) => {
+        const date = row.keys[0];
+        const impressions = row.impressions || 0;
+        const clicks = row.clicks || 0;
+        const ctr = (row.ctr || 0) * 100; // Convert to percentage
+        const position = row.position || 0;
+
+        dailyData.push({
+          date,
+          impressions,
+          clicks,
+          ctr: parseFloat(ctr.toFixed(2)),
+          position: parseFloat(position.toFixed(1)),
+        });
+
+        totalImpressions += impressions;
+        totalClicks += clicks;
+        totalCTR += ctr;
+        totalPosition += position;
+        rowCount++;
+      });
+    }
+
+    console.log(`[searchConsole] Found ${rowCount} days of data`);
+
+    return {
+      totalImpressions,
+      totalClicks,
+      avgCTR: parseFloat((totalCTR / (rowCount || 1)).toFixed(2)),
+      avgPosition: parseFloat((totalPosition / (rowCount || 1)).toFixed(1)),
+      dailyData,
+    };
+  } catch (error) {
+    console.error('Error fetching Search Console data:', error);
+    throw error;
+  }
+}
+
+/**
  * Fetch Google Search Console data for the last 6 months
  * @param siteUrl - Search Console property URL (e.g., https://www.example.com/)
  */

@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 
 export default function LinkedInAdsOverview() {
+  const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({
@@ -18,8 +20,19 @@ export default function LinkedInAdsOverview() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/linkedin-ads');
+        setLoading(true);
+        const days = getDateRangeInDays();
+        console.log(`[LinkedInAdsOverview] Fetching data for ${dateRange} (${days} days)`);
+        
+        // Add timestamp to prevent caching issues
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/linkedin-ads?days=${days}&t=${timestamp}`, {
+          cache: 'no-store',
+        });
         const result = await response.json();
+        
+        console.log(`[LinkedInAdsOverview] Data source: ${result.source}`);
+        console.log(`[LinkedInAdsOverview] Data points: ${result.data?.chartData?.length || 0}`);
         
         if (result.data) {
           setData(result.data.chartData || []);
@@ -40,7 +53,7 @@ export default function LinkedInAdsOverview() {
     }
 
     fetchData();
-  }, []);
+  }, [dateRange, getDateRangeInDays]);
 
   if (loading) {
     return (

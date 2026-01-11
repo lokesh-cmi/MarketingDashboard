@@ -2,28 +2,47 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/database/client';
 import { getCachedData, setCachedData } from '@/lib/database/cache';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const cacheKey = 'google-ads-overview';
+    const { searchParams } = new URL(request.url);
+    const days = parseInt(searchParams.get('days') || '7');
+    
+    console.log(`[API /google-ads] Request for ${days} days`);
+    
+    const cacheKey = `google-ads-overview-${days}`;
     
     // Try cache first
     const cached = await getCachedData<any>(cacheKey);
     if (cached) {
+      console.log(`[API /google-ads] Returning cached data for ${days} days`);
       return NextResponse.json({ 
         data: cached, 
         source: 'cache' 
       });
     }
 
-    // Fetch from database
+    console.log(`[API /google-ads] Cache miss, fetching from database`);
+
+    // Calculate start date
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Fetch from database with date filter
     const googleAds = await prisma.googleAds.findMany({
+      where: {
+        date: {
+          gte: startDate,
+        },
+      },
       orderBy: {
         date: 'desc',
       },
-      take: 7,
+      take: days,
     });
 
     const campaigns = await prisma.googleAdsCampaign.findMany();
+
+    console.log(`[API /google-ads] Found ${googleAds.length} days of data`);
 
     // Transform data
     const chartData = googleAds.reverse().map((item) => ({

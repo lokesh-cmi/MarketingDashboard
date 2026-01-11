@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, ComposedChart } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 
 interface SearchConsoleData {
   date: string;
@@ -22,6 +23,7 @@ interface SearchConsoleSummary {
 }
 
 export default function SearchConsoleOverview() {
+  const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<SearchConsoleSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,13 +32,23 @@ export default function SearchConsoleOverview() {
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await fetch('/api/search-console');
+        const days = getDateRangeInDays();
+        console.log(`[SearchConsoleOverview] Fetching data for ${dateRange} (${days} days)`);
+        
+        // Add timestamp to prevent caching issues
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/search-console?days=${days}&t=${timestamp}`, {
+          cache: 'no-store',
+        });
         
         if (!response.ok) {
           throw new Error('Failed to fetch search console data');
         }
         
         const searchData = await response.json();
+        console.log(`[SearchConsoleOverview] Data source: ${searchData.source}`);
+        console.log(`[SearchConsoleOverview] Data points: ${searchData.dailyData?.length || 0}`);
+        
         setData(searchData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -47,7 +59,7 @@ export default function SearchConsoleOverview() {
     }
 
     fetchData();
-  }, []);
+  }, [dateRange, getDateRangeInDays]);
 
   if (loading) {
     return (

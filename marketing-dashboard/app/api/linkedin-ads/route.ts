@@ -2,26 +2,47 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/database/client';
 import { getCachedData, setCachedData } from '@/lib/database/cache';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const cacheKey = 'linkedin-ads-overview';
+    const { searchParams } = new URL(request.url);
+    const days = parseInt(searchParams.get('days') || '30');
+    
+    console.log(`[API /linkedin-ads] Request for ${days} days`);
+    
+    const cacheKey = `linkedin-ads-overview-${days}`;
     
     // Try to get cached data first
     const cached = await getCachedData<any>(cacheKey);
     if (cached) {
+      console.log(`[API /linkedin-ads] Returning cached data for ${days} days`);
       return NextResponse.json({ 
         data: cached, 
         source: 'cache' 
       });
     }
 
-    // Fetch from database
+    console.log(`[API /linkedin-ads] Cache miss, fetching from database`);
+
+    // Calculate start date
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    console.log(`[API /linkedin-ads] Filtering from ${startDate.toISOString()}`);
+
+    // Fetch from database with date filter
     const linkedInAds = await prisma.linkedInAds.findMany({
+      where: {
+        date: {
+          gte: startDate,
+        },
+      },
       orderBy: {
         date: 'desc',
       },
-      take: 30, // Last 30 days
+      take: days, // Last X days
     });
+    
+    console.log(`[API /linkedin-ads] Found ${linkedInAds.length} records`);
 
     // Transform data for chart
     const chartData = linkedInAds.reverse().map((item) => ({

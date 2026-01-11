@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 
 export default function GoogleAdsOverview() {
+  const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({
@@ -17,8 +19,17 @@ export default function GoogleAdsOverview() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/google-ads');
+        setLoading(true);
+        const days = getDateRangeInDays();
+        console.log(`[GoogleAdsOverview] Fetching data for ${dateRange} (${days} days)`);
+        
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/google-ads?days=${days}&t=${timestamp}`, {
+          cache: 'no-store',
+        });
         const result = await response.json();
+        
+        console.log(`[GoogleAdsOverview] Data source: ${result.source}`);
         
         if (result.data) {
           setData(result.data.chartData || []);
@@ -34,7 +45,7 @@ export default function GoogleAdsOverview() {
     }
 
     fetchData();
-  }, []);
+  }, [dateRange, getDateRangeInDays]);
 
   if (loading) {
     return (

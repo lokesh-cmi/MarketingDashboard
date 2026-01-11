@@ -26,10 +26,15 @@ async function main() {
 
   // Seed LinkedIn Ads Data
   console.log('Seeding LinkedIn Ads...');
-  for (const item of linkedInAdsOverviewData) {
+  const today = new Date();
+  for (let i = 0; i < linkedInAdsOverviewData.length; i++) {
+    const item = linkedInAdsOverviewData[i];
+    const date = new Date(today);
+    date.setDate(date.getDate() - (linkedInAdsOverviewData.length - i)); // Count backwards from today
+    
     await prisma.linkedInAds.create({
       data: {
-        date: new Date(`2024-01-${item.day.padStart(2, '0')}`),
+        date: date,
         clicks: item.clicks,
         spend: item.spend,
         impressions: item.impressions,
@@ -40,10 +45,14 @@ async function main() {
 
   // Seed Google Ads Data
   console.log('Seeding Google Ads...');
-  for (const item of googleAdsOverviewData) {
+  for (let i = 0; i < googleAdsOverviewData.length; i++) {
+    const item = googleAdsOverviewData[i];
+    const date = new Date(today);
+    date.setDate(date.getDate() - (googleAdsOverviewData.length - i)); // Count backwards from today
+    
     await prisma.googleAds.create({
       data: {
-        date: new Date(item.date + ' 2024'),
+        date: date,
         clicks: item.clicks,
         cost: item.cost,
         conversions: item.conversions,

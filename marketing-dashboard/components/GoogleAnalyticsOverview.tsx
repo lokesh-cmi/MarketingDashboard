@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 
 interface AnalyticsData {
   month: string;
@@ -22,6 +23,7 @@ interface AnalyticsSummary {
 }
 
 export default function GoogleAnalyticsOverview() {
+  const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,13 @@ export default function GoogleAnalyticsOverview() {
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await fetch('/api/google-analytics');
+        const days = getDateRangeInDays();
+        console.log(`[GoogleAnalyticsOverview] Fetching data for ${dateRange} (${days} days)`);
+        
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/google-analytics?days=${days}&t=${timestamp}`, {
+          cache: 'no-store',
+        });
         
         if (!response.ok) {
           console.log('Failed to fetch analytics data', response);
@@ -38,6 +46,7 @@ export default function GoogleAnalyticsOverview() {
         }
         
         const analyticsData = await response.json();
+        console.log(`[GoogleAnalyticsOverview] Data source: ${analyticsData.source}`);
         setData(analyticsData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -48,7 +57,7 @@ export default function GoogleAnalyticsOverview() {
     }
 
     fetchData();
-  }, []);
+  }, [dateRange, getDateRangeInDays]);
 
   if (loading) {
     return (
