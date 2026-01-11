@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -34,10 +34,10 @@ const clicksOverTimeData = [
 
 // Mock data for clicks by campaign (bar chart)
 const leadsByCampaignData = [
-  { campaign: 'Applied and Gen AI', leads: 60 },
-  { campaign: 'Intelligent Automation', leads: 58 },
-  { campaign: 'Cloud and Data', leads: 60 },
-  { campaign: 'Digital Products', leads: 58 },
+  { campaign: 'Applied and\nGen AI', leads: 60 },
+  { campaign: 'Intelligent\nAutomation', leads: 58 },
+  { campaign: 'Cloud and\nData', leads: 60 },
+  { campaign: 'Digital Products\nand Platforms', leads: 58 },
 ];
 
 // Mock data for campaigns table
@@ -85,6 +85,15 @@ const campaignsData = [
 ];
 
 export default function GoogleAdsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter campaigns based on search query
+  const filteredCampaigns = campaignsData.filter(campaign =>
+    campaign.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    campaign.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    campaign.network.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
       <div className="p-8">
@@ -148,14 +157,18 @@ export default function GoogleAdsPage() {
                 <div className="text-3xl font-bold text-gray-900 mt-2">236</div>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={220}>
               <BarChart data={leadsByCampaignData}>
                 <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
                 <XAxis 
                   dataKey="campaign" 
-                  tick={{ fontSize: 10, fill: '#999' }} 
+                  tick={{ fontSize: 9, fill: '#999' }} 
                   axisLine={{ stroke: '#e5e7eb' }}
                   tickLine={false}
+                  interval={0}
+                  angle={0}
+                  textAnchor="middle"
+                  height={50}
                 />
                 <YAxis 
                   tick={{ fontSize: 11, fill: '#999' }} 
@@ -165,6 +178,7 @@ export default function GoogleAdsPage() {
                 />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                  formatter={(value) => [`${value}`, 'Leads']}
                 />
                 <Bar 
                   dataKey="leads" 
@@ -228,11 +242,13 @@ export default function GoogleAdsPage() {
         {/* Campaigns Table */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
           <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-500">Showing 4 of 4 Rows</div>
+            <div className="text-sm text-gray-500">Showing {filteredCampaigns.length} of {campaignsData.length} Rows</div>
             <input 
               type="text" 
-              placeholder="Search"
-              className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search campaigns..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
             />
           </div>
           <div className="overflow-x-auto">
@@ -266,11 +282,12 @@ export default function GoogleAdsPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {campaignsData.map((campaign, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {campaign.name}
-                    </td>
+                {filteredCampaigns.length > 0 ? (
+                  filteredCampaigns.map((campaign, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {campaign.name}
+                      </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {campaign.searchImprShare}
                     </td>
@@ -301,7 +318,14 @@ export default function GoogleAdsPage() {
                       {campaign.conversionRate}
                     </td>
                   </tr>
-                ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-sm text-gray-500">
+                      No campaigns found matching "{searchQuery}"
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
