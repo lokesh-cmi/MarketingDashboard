@@ -87,7 +87,7 @@ export default function HubSpotOverview() {
         <h2 className="text-xl font-semibold text-gray-900">HubSpot Overview</h2>
         <Link
           href="/hubspot?category=seo"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+          className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 transition-colors"
         >
           View More
           <ChevronRight className="w-4 h-4" />
