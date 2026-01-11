@@ -31,7 +31,7 @@ export interface TimeSeriesData {
 }
 
 // LinkedIn Metrics
-export const linkedInMetrics: SocialMediaMetrics = {
+export const linkedInMetrics = {
   followers: 45200,
   followersChange: 8.5,
   impressions: 96100,
@@ -55,7 +55,7 @@ export const linkedInTimeSeriesData: TimeSeriesData[] = [
 ];
 
 // Instagram Metrics
-export const instagramMetrics: SocialMediaMetrics = {
+export const instagramMetrics = {
   followers: 128500,
   followersChange: 12.3,
   reach: 230300,
@@ -79,7 +79,7 @@ export const instagramTimeSeriesData: TimeSeriesData[] = [
 ];
 
 // Facebook Metrics
-export const facebookMetrics: SocialMediaMetrics = {
+export const facebookMetrics = {
   followers: 98400,
   followersChange: 6.8,
   reach: 346000,
@@ -103,7 +103,7 @@ export const facebookTimeSeriesData: TimeSeriesData[] = [
 ];
 
 // Twitter Metrics
-export const twitterMetrics: SocialMediaMetrics = {
+export const twitterMetrics = {
   followers: 67800,
   followersChange: 9.7,
   impressions: 151400,

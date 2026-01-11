@@ -150,7 +150,8 @@ export default function SearchConsoleOverview() {
             domain={[0, 'dataMax + 10']}
           />
           <Tooltip 
-            formatter={(value: number, name: string) => {
+            formatter={(value: number | undefined, name: string | undefined) => {
+              if (!value || !name) return ['', ''];
               if (name === 'position') {
                 return [value.toFixed(1), 'Position'];
               }

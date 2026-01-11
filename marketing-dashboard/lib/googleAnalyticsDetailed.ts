@@ -278,7 +278,7 @@ export async function fetchDetailedAnalyticsDataByDays(propertyId: string, days:
       orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
     });
 
-    const trafficSources: SourceData[] = sourceResponse.rows?.map(row => ({
+    const trafficSources: TrafficSource[] = sourceResponse.rows?.map(row => ({
       source: row.dimensionValues?.[0]?.value || '',
       sessions: parseInt(row.metricValues?.[0]?.value || '0'),
       percentage: (parseInt(row.metricValues?.[0]?.value || '0') / totalSessions) * 100,

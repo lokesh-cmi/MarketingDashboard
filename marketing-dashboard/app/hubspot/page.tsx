@@ -180,7 +180,7 @@ export default function HubSpotPage() {
                   tickFormatter={(value) => formatCurrency(value)}
                 />
                 <Tooltip 
-                  formatter={(value: number) => formatCurrency(value)}
+                  formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
                 />
                 <Bar dataKey="amount" fill="#7C3AED" radius={[4, 4, 0, 0]} />
@@ -215,7 +215,7 @@ export default function HubSpotPage() {
                   tickFormatter={(value) => formatCurrency(value)}
                 />
                 <Tooltip 
-                  formatter={(value: number) => formatCurrency(value)}
+                  formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
                 />
                 <Bar dataKey="amount" fill="#EC4899" radius={[4, 4, 0, 0]} />

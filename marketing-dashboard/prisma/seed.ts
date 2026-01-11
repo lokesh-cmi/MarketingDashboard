@@ -130,7 +130,7 @@ async function main() {
       score: siteHealthData.score,
       errors: siteHealthData.errors,
       warnings: siteHealthData.warnings,
-      notices: siteHealthData.notices || 0,
+      notices: 23, // Default value
     },
   });
 
@@ -143,11 +143,11 @@ async function main() {
       data: {
         platform: 'LinkedIn',
         date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
-        followers: item.followers,
-        impressions: item.impressions,
-        engagement: item.engagement,
-        clicks: item.clicks,
-        shares: item.shares,
+        followers: Number(item.followers) || 0,
+        impressions: Number(item.impressions) || 0,
+        engagement: Number(item.engagement) || 0,
+        clicks: Number(item.clicks) || 0,
+        shares: Number(item.shares) || 0,
       },
     });
   }
@@ -158,12 +158,12 @@ async function main() {
       data: {
         platform: 'Instagram',
         date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
-        followers: item.followers,
-        reach: item.reach,
-        engagement: item.likes + item.comments,
-        likes: item.likes,
-        comments: item.comments,
-        saves: item.saves,
+        followers: Number(item.followers) || 0,
+        reach: Number(item.reach) || 0,
+        engagement: Number(item.likes) + Number(item.comments),
+        likes: Number(item.likes) || 0,
+        comments: Number(item.comments) || 0,
+        saves: Number(item.saves) || 0,
       },
     });
   }
@@ -174,11 +174,11 @@ async function main() {
       data: {
         platform: 'Facebook',
         date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
-        followers: item.followers,
-        reach: item.reach,
-        engagement: item.engagement,
-        reactions: item.reactions,
-        shares: item.shares,
+        followers: Number(item.followers) || 0,
+        reach: Number(item.reach) || 0,
+        engagement: Number(item.engagement) || 0,
+        reactions: Number(item.reactions) || 0,
+        shares: Number(item.shares) || 0,
       },
     });
   }
@@ -189,11 +189,11 @@ async function main() {
       data: {
         platform: 'Twitter',
         date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
-        followers: item.followers,
-        impressions: item.impressions,
-        engagement: item.engagement,
-        retweets: item.retweets,
-        likes: item.likes,
+        followers: Number(item.followers) || 0,
+        impressions: Number(item.impressions) || 0,
+        engagement: Number(item.engagement) || 0,
+        retweets: Number(item.retweets) || 0,
+        likes: Number(item.likes) || 0,
       },
     });
   }

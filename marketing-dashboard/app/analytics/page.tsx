@@ -256,7 +256,7 @@ export default function AnalyticsPage() {
                       <Cell key={`cell-${index}`} fill={DEVICE_COLORS[entry.name.toLowerCase()] || '#8b5cf6'} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => formatNumber(value)} />
+                  <Tooltip formatter={(value: number | undefined) => value !== undefined ? formatNumber(value) : ''} />
                   <Legend 
                     verticalAlign="bottom" 
                     height={36}

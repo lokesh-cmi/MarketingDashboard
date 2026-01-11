@@ -1,29 +1,73 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
+import { useDateRange } from '@/contexts/DateRangeContext';
 import { 
   aiVisibilityStats,
   aiVisibilityTrend,
   aiToolsStats,
   seoStats,
   visibilityData,
-  top3KeywordsData, 
-  top10KeywordsData, 
-  top20KeywordsData, 
-  top100KeywordsData,
-  topKeywords,
-  siteHealthData,
   seoCheckerData
 } from '@/lib/mock-data/semrushData';
 
 export default function SEMrushPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'seo';
-  const [dateRange, setDateRange] = useState('Last 30 Days');
+  const { dateRange, getDateRangeInDays } = useDateRange();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const days = getDateRangeInDays();
+        console.log(`[SEMrushPage] Fetching data for ${dateRange} (${days} days)`);
+        const response = await fetch(`/api/semrush?days=${days}`);
+        if (!response.ok) throw new Error('Failed to fetch SEMrush data');
+        const semrushData = await response.json();
+        console.log(`[SEMrushPage] Data source: ${semrushData.source}`);
+        setData(semrushData);
+      } catch (err) {
+        console.error('Error fetching SEMrush data:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [dateRange, getDateRangeInDays]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="h-48 bg-gray-200 rounded"></div>
+              <div className="h-48 bg-gray-200 rounded"></div>
+            </div>
+            <div className="h-96 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-8">
+          <p className="text-gray-500">Failed to load SEMrush data</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -41,17 +85,6 @@ export default function SEMrushPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">SEO Dashboard: xebia</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <select 
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-              >
-                <option>Last 7 Days</option>
-                <option>Last 30 Days</option>
-                <option>Last 90 Days</option>
-              </select>
             </div>
           </div>
         </div>
@@ -253,144 +286,52 @@ export default function SEMrushPage() {
                 <div>
                   <div className="flex items-baseline gap-2 mb-2">
                     <div className="text-xs text-gray-600">Top 3</div>
-                    <div className="text-xl font-bold text-gray-900">12</div>
+                    <div className="text-xl font-bold text-gray-900">{data.keywords.top3.count}</div>
                   </div>
                   <div className="flex gap-2 text-xs text-gray-600 mb-2">
-                    <span>new <span className="text-green-600">3</span></span>
-                    <span>lost <span className="text-red-600">1</span></span>
+                    <span>new <span className="text-green-600">{data.keywords.top3.new}</span></span>
+                    <span>lost <span className="text-red-600">{data.keywords.top3.lost}</span></span>
                   </div>
-                  <ResponsiveContainer width="100%" height={60}>
-                    <LineChart data={top3KeywordsData} margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="top3Gradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#84CC16" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#84CC16" stopOpacity={0.05}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                      <XAxis dataKey="day" hide />
-                      <YAxis hide domain={[8, 14]} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '10px' }}
-                        formatter={(value: number | undefined) => value ? [value, 'Keywords'] : ['', '']}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="count" 
-                        stroke="#84CC16" 
-                        strokeWidth={2}
-                        fill="url(#top3Gradient)"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {/* Chart removed for simplicity - values are dynamic */}
                 </div>
 
                 {/* Top 10 Keywords */}
                 <div>
                   <div className="flex items-baseline gap-2 mb-2">
                     <div className="text-xs text-gray-600">Top 10</div>
-                    <div className="text-xl font-bold text-gray-900">18</div>
+                    <div className="text-xl font-bold text-gray-900">{data.keywords.top10.count}</div>
                   </div>
                   <div className="flex gap-2 text-xs text-gray-600 mb-2">
-                    <span>new <span className="text-green-600">4</span></span>
-                    <span>lost <span className="text-red-600">3</span></span>
+                    <span>new <span className="text-green-600">{data.keywords.top10.new}</span></span>
+                    <span>lost <span className="text-red-600">{data.keywords.top10.lost}</span></span>
                   </div>
-                  <ResponsiveContainer width="100%" height={60}>
-                    <LineChart data={top10KeywordsData} margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="top10Gradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.05}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                      <XAxis dataKey="day" hide />
-                      <YAxis hide domain={[12, 20]} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '10px' }}
-                        formatter={(value: number | undefined) => value ? [value, 'Keywords'] : ['', '']}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="count" 
-                        stroke="#06B6D4" 
-                        strokeWidth={2}
-                        fill="url(#top10Gradient)"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {/* Chart removed for simplicity - values are dynamic */}
                 </div>
 
                 {/* Top 20 Keywords */}
                 <div>
                   <div className="flex items-baseline gap-2 mb-2">
                     <div className="text-xs text-gray-600">Top 20</div>
-                    <div className="text-xl font-bold text-gray-900">28</div>
+                    <div className="text-xl font-bold text-gray-900">{data.keywords.top20.count}</div>
                   </div>
                   <div className="flex gap-2 text-xs text-gray-600 mb-2">
-                    <span>new <span className="text-green-600">7</span></span>
-                    <span>lost <span className="text-red-600">5</span></span>
+                    <span>new <span className="text-green-600">{data.keywords.top20.new}</span></span>
+                    <span>lost <span className="text-red-600">{data.keywords.top20.lost}</span></span>
                   </div>
-                  <ResponsiveContainer width="100%" height={60}>
-                    <LineChart data={top20KeywordsData} margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="top20Gradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#84CC16" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#84CC16" stopOpacity={0.05}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                      <XAxis dataKey="day" hide />
-                      <YAxis hide domain={[20, 30]} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '10px' }}
-                        formatter={(value: number | undefined) => value ? [value, 'Keywords'] : ['', '']}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="count" 
-                        stroke="#84CC16" 
-                        strokeWidth={2}
-                        fill="url(#top20Gradient)"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {/* Chart removed for simplicity - values are dynamic */}
                 </div>
 
                 {/* Top 100 Keywords */}
                 <div>
                   <div className="flex items-baseline gap-2 mb-2">
                     <div className="text-xs text-gray-600">Top 100</div>
-                    <div className="text-xl font-bold text-gray-900">79</div>
+                    <div className="text-xl font-bold text-gray-900">{data.keywords.top100.count}</div>
                   </div>
                   <div className="flex gap-2 text-xs text-gray-600 mb-2">
-                    <span>new <span className="text-green-600">8</span></span>
-                    <span>lost <span className="text-red-600">6</span></span>
+                    <span>new <span className="text-green-600">{data.keywords.top100.new}</span></span>
+                    <span>lost <span className="text-red-600">{data.keywords.top100.lost}</span></span>
                   </div>
-                  <ResponsiveContainer width="100%" height={60}>
-                    <LineChart data={top100KeywordsData} margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="top100Gradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.05}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                      <XAxis dataKey="day" hide />
-                      <YAxis hide domain={[72, 82]} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '10px' }}
-                        formatter={(value: number | undefined) => value ? [value, 'Keywords'] : ['', '']}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="count" 
-                        stroke="#06B6D4" 
-                        strokeWidth={2}
-                        fill="url(#top100Gradient)"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {/* Chart removed for simplicity - values are dynamic */}
                 </div>
               </div>
             </div>
@@ -403,9 +344,9 @@ export default function SEMrushPage() {
                   <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 font-medium pb-2 border-b sticky top-0 bg-white z-10 px-3 pt-2">
                     <div>Keywords</div>
                     <div className="text-center">Position</div>
-                    <div className="text-right">Visibility</div>
+                    <div className="text-right">Traffic</div>
                   </div>
-                  {topKeywords.map((keyword, index) => (
+                  {data.topKeywords.slice(0, 100).map((keyword: any, index: number) => (
                     <div key={index} className="grid grid-cols-3 gap-2 py-2 border-b border-gray-100 items-center px-3 hover:bg-gray-50">
                       <div className="text-xs text-blue-600 hover:underline cursor-pointer truncate" title={keyword.keyword}>
                         {keyword.keyword}
@@ -422,7 +363,7 @@ export default function SEMrushPage() {
                           <span className="text-gray-400">−</span>
                         )}
                       </div>
-                      <div className="text-right text-xs text-gray-600">{keyword.visibility}</div>
+                      <div className="text-right text-xs text-gray-600">{keyword.traffic}</div>
                     </div>
                   ))}
                 </div>
@@ -459,13 +400,12 @@ export default function SEMrushPage() {
                       stroke="#84CC16"
                       strokeWidth="12"
                       fill="none"
-                      strokeDasharray={`${(siteHealthData.score / 100) * 351.86} 351.86`}
+                      strokeDasharray={`${(data.siteHealth.score / 100) * 351.86} 351.86`}
                       strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="text-4xl font-bold text-gray-900">{siteHealthData.score}%</div>
-                    <div className="text-sm text-red-600">{siteHealthData.change}</div>
+                    <div className="text-4xl font-bold text-gray-900">{data.siteHealth.score}%</div>
                   </div>
                 </div>
 
@@ -474,9 +414,8 @@ export default function SEMrushPage() {
                     <div className="text-sm text-gray-600 mb-1">Errors</div>
                     <div className="flex items-baseline gap-2">
                       <div className="text-2xl font-bold text-red-600">
-                        {siteHealthData.errors.toLocaleString()}
+                        {data.siteHealth.errors.toLocaleString()}
                       </div>
-                      <div className="text-sm text-red-600">+{siteHealthData.errorsChange.toLocaleString()}</div>
                     </div>
                   </div>
 
@@ -484,24 +423,11 @@ export default function SEMrushPage() {
                     <div className="text-sm text-gray-600 mb-1">Warnings</div>
                     <div className="flex items-baseline gap-2">
                       <div className="text-2xl font-bold text-orange-600">
-                        {siteHealthData.warnings.toLocaleString()}
+                        {data.siteHealth.warnings.toLocaleString()}
                       </div>
-                      <div className="text-sm text-green-600">{siteHealthData.warningsChange}</div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <div className="text-sm text-gray-600 mb-2">Crawled Pages</div>
-              <div className="text-2xl font-bold text-gray-900 mb-3">
-                {siteHealthData.crawledPages.toLocaleString()}
-              </div>
-              <div className="flex gap-1 h-3 rounded overflow-hidden mb-2">
-                <div className="bg-green-500 flex-[85]"></div>
-                <div className="bg-yellow-400 flex-[10]"></div>
-                <div className="bg-red-500 flex-[5]"></div>
               </div>
             </div>
           </div>
