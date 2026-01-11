@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { dealsBreakdown as mockDealsBreakdown } from '@/lib/mock-data/hubspotDetailData';
 
 export default function HubSpotPage() {
   const searchParams = useSearchParams();
@@ -13,6 +14,7 @@ export default function HubSpotPage() {
   const [pipelineData, setPipelineData] = useState<any[]>([]);
   const [dealsData, setDealsData] = useState({ totalDeals: 0, totalAmount: 0 });
   const [loading, setLoading] = useState(true);
+  const dealsBreakdown = mockDealsBreakdown; // Use the mock data
 
   useEffect(() => {
     async function fetchData() {
