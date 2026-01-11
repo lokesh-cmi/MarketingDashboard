@@ -83,33 +83,67 @@ export default function SEMrushOverview() {
       <div className="pt-6 border-t border-gray-200">
         <h3 className="text-sm font-medium text-gray-700 mb-4">Site Health</h3>
         
-        <div className="flex justify-center">
-          <div className="relative inline-flex items-center justify-center">
-            <svg className="w-36 h-36 transform -rotate-90">
-              {/* Background circle */}
-              <circle
-                cx="72"
-                cy="72"
-                r="57"
-                stroke="#E5E7EB"
-                strokeWidth="13"
-                fill="none"
-              />
-              {/* Progress circle */}
-              <circle
-                cx="72"
-                cy="72"
-                r="57"
-                stroke="#84CC16"
-                strokeWidth="13"
-                fill="none"
-                strokeDasharray={`${(siteHealthData.score / 100) * 358.14} 358.14`}
-                strokeLinecap="round"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-4xl font-bold text-gray-900">{siteHealthData.score}%</div>
-              <div className="text-sm text-red-600">{siteHealthData.change}</div>
+        <div className="grid grid-cols-2 gap-8">
+          {/* Site Health Gauge - Left Side */}
+          <div className="flex items-center justify-center">
+            <div className="relative inline-flex items-center justify-center">
+              <svg className="w-36 h-36 transform -rotate-90">
+                {/* Background circle */}
+                <circle
+                  cx="72"
+                  cy="72"
+                  r="57"
+                  stroke="#E5E7EB"
+                  strokeWidth="13"
+                  fill="none"
+                />
+                {/* Progress circle */}
+                <circle
+                  cx="72"
+                  cy="72"
+                  r="57"
+                  stroke="#84CC16"
+                  strokeWidth="13"
+                  fill="none"
+                  strokeDasharray={`${(siteHealthData.score / 100) * 358.14} 358.14`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-4xl font-bold text-gray-900">{siteHealthData.score}%</div>
+                <div className="text-sm text-red-600">{siteHealthData.change}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Errors and Warnings - Right Side */}
+          <div className="space-y-4">
+            {/* Errors */}
+            <div>
+              <div className="text-sm text-gray-600 mb-2">Errors</div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-3xl font-bold text-red-600">
+                  {siteHealthData.errors.toLocaleString()}
+                </div>
+                <div className="text-sm text-red-600">+{siteHealthData.errorsChange.toLocaleString()}</div>
+              </div>
+              <div className="h-8 relative rounded overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50"></div>
+              </div>
+            </div>
+
+            {/* Warnings */}
+            <div>
+              <div className="text-sm text-gray-600 mb-2">Warnings</div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-3xl font-bold text-orange-600">
+                  {siteHealthData.warnings.toLocaleString()}
+                </div>
+                <div className="text-sm text-green-600">{siteHealthData.warningsChange}</div>
+              </div>
+              <div className="h-8 relative rounded overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-100 to-orange-50"></div>
+              </div>
             </div>
           </div>
         </div>
