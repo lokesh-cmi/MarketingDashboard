@@ -106,6 +106,52 @@ I want to install @google-analytics/data to fetch google analytics data and i ha
 
 ---
 
+## Prompt 5: Google Search Console Integration
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+now i want to install googleapis and i have already added necessary information in env.local file. now i want you to fetch the data from google search console with parameters impressions, clicks, ctr and average position and show the data in the form of graph in @marketing-dashboard/components/SearchConsoleOverview.tsx
+```
+
+**Context**:
+- User has already added GSC configuration to `.env.local`:
+  - `GSC_SITE_URL=https://www.maritimegateway.com/`
+  - `GSC_SERVICE_ACCOUNT_KEY` with service account credentials
+- Need to integrate Google Search Console API
+- Fetch metrics: Impressions, Clicks, CTR, Average Position
+- Display data in chart format
+
+**Result**:
+- Installed `googleapis` package (4 packages added)
+- Created `/lib/searchConsole.ts` - Search Console API client and utilities
+  - `getSearchConsoleClient()` - Initialize GSC client with service account
+  - `fetchSearchConsoleData()` - Fetch last 6 months of daily data
+  - `fetchSearchConsoleMonthlyData()` - Aggregate data by month for visualization
+  - `formatMetricNumber()` - Format numbers with K/M suffix
+- Created `/app/api/search-console/route.ts` - API endpoint
+  - GET endpoint that calls Search Console API
+  - Returns monthly aggregated data for last 6 months
+- Updated `/components/SearchConsoleOverview.tsx`
+  - Added real-time data fetching with loading/error states
+  - Displays metrics: Impressions, Clicks, Avg Position, CTR
+  - Composed chart with bars (Impressions, Clicks) and line (Position)
+  - Dual Y-axis for different metric scales
+  - Monthly data visualization (Jan, Feb, Mar, Apr, May, Jun)
+  - Color-coded: Gray bars (Impressions), Blue bars (Clicks), Orange line (Position)
+- Created `SEARCH_CONSOLE_SETUP.md` - Complete setup guide
+- Created `GSC_INTEGRATION_COMPLETE.md` - Quick start guide
+- Uses service account authentication with Search Console API scope
+
+**Configuration**:
+- Already configured in `.env.local` with site URL and service account
+- Service account needs "Full" or "Owner" permission in Search Console
+- Restart dev server to load new changes
+
+**Update**: Changed from 30 days/weekly to 6 months/monthly aggregation for consistency with GA chart
+
+---
+
 ## Project Summary
 
 ### Tech Stack

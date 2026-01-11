@@ -1,16 +1,84 @@
 'use client';
 
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, ComposedChart } from 'recharts';
 
-const data = [
-  { week: 'Week 1', impressions: 45000, clicks: 3200 },
-  { week: 'Week 2', impressions: 48000, clicks: 3400 },
-  { week: 'Week 3', impressions: 51000, clicks: 3600 },
-  { week: 'Week 4', impressions: 50000, clicks: 3500 },
-];
+interface SearchConsoleData {
+  date: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  position: number;
+}
+
+interface SearchConsoleSummary {
+  totalImpressions: number;
+  totalClicks: number;
+  avgCTR: number;
+  avgPosition: number;
+  dailyData: SearchConsoleData[];
+}
 
 export default function SearchConsoleOverview() {
+  const [data, setData] = useState<SearchConsoleSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/search-console');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch search console data');
+        }
+        
+        const searchData = await response.json();
+        setData(searchData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching search console data:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Search Console Overview</h2>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading search console data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Search Console Overview</h2>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-red-500">Error: {error || 'Failed to load data'}</div>
+        </div>
+      </div>
+    );
+  }
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toLocaleString('en-US');
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">Search Console Overview</h2>
@@ -18,32 +86,71 @@ export default function SearchConsoleOverview() {
       <div className="grid grid-cols-4 gap-6 mb-6">
         <div>
           <div className="text-sm text-gray-500 mb-1">Impressions</div>
-          <div className="text-2xl font-semibold text-gray-900">194K</div>
+          <div className="text-2xl font-semibold text-gray-900">
+            {formatNumber(data.totalImpressions)}
+          </div>
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">Clicks</div>
-          <div className="text-2xl font-semibold text-gray-900">14.1K</div>
+          <div className="text-2xl font-semibold text-gray-900">
+            {formatNumber(data.totalClicks)}
+          </div>
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">Avg Position</div>
-          <div className="text-2xl font-semibold text-gray-900">12.3</div>
+          <div className="text-2xl font-semibold text-gray-900">
+            {data.avgPosition.toFixed(1)}
+          </div>
         </div>
         <div>
           <div className="text-sm text-gray-500 mb-1">CTR</div>
-          <div className="text-2xl font-semibold text-gray-900">7.27%</div>
+          <div className="text-2xl font-semibold text-gray-900">
+            {data.avgCTR.toFixed(2)}%
+          </div>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data}>
+        <ComposedChart data={data.dailyData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="week" tick={{ fontSize: 12 }} stroke="#999" />
-          <YAxis tick={{ fontSize: 12 }} stroke="#999" />
-          <Tooltip />
+          <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
+          <YAxis 
+            yAxisId="left"
+            tick={{ fontSize: 12 }} 
+            stroke="#999"
+          />
+          <YAxis 
+            yAxisId="right" 
+            orientation="right"
+            tick={{ fontSize: 12 }} 
+            stroke="#999"
+            domain={[0, 'dataMax + 10']}
+          />
+          <Tooltip 
+            formatter={(value: number, name: string) => {
+              if (name === 'position') {
+                return [value.toFixed(1), 'Position'];
+              }
+              if (name === 'ctr') {
+                return [value.toFixed(2) + '%', 'CTR'];
+              }
+              return [formatNumber(value), name];
+            }}
+            contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}
+          />
           <Legend wrapperStyle={{ fontSize: 12 }} />
-          <Bar dataKey="impressions" fill="#6b7280" />
-          <Bar dataKey="clicks" fill="#3b82f6" />
-        </BarChart>
+          <Bar yAxisId="left" dataKey="impressions" fill="#6b7280" name="Impressions" />
+          <Bar yAxisId="left" dataKey="clicks" fill="#3b82f6" name="Clicks" />
+          <Line 
+            yAxisId="right" 
+            type="monotone" 
+            dataKey="position" 
+            stroke="#f59e0b" 
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            name="Position"
+          />
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );
