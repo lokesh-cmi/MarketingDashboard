@@ -163,6 +163,13 @@ export async function fetchGoogleAnalyticsData(propertyId: string): Promise<Anal
   }
 }
 
+// Helper function to format duration from seconds to MM:SS
+function formatDuration(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
 export async function fetchDetailedAnalyticsDataByDays(propertyId: string, days: number = 30): Promise<DetailedAnalytics> {
   try {
     const client = getAnalyticsClient();
