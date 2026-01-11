@@ -33,17 +33,17 @@ const clicksOverTimeData = [
 ];
 
 // Mock data for clicks by campaign (bar chart)
-const clicksByCampaignData = [
-  { campaign: 'Acme Dental', clicks: 60 },
-  { campaign: 'Acme Auto Body', clicks: 58 },
-  { campaign: 'Acme Marketing', clicks: 60 },
-  { campaign: 'Acme Law', clicks: 58 },
+const leadsByCampaignData = [
+  { campaign: 'Applied and Gen AI', leads: 60 },
+  { campaign: 'Intelligent Automation', leads: 58 },
+  { campaign: 'Cloud and Data', leads: 60 },
+  { campaign: 'Digital Products', leads: 58 },
 ];
 
 // Mock data for campaigns table
 const campaignsData = [
   {
-    name: 'Acme Law',
+    name: 'Applied and Gen AI',
     searchImprShare: '30.00%',
     status: 'ENABLED',
     network: 'DISPLAY NETW...',
@@ -53,7 +53,7 @@ const campaignsData = [
     conversionRate: '10.43%',
   },
   {
-    name: 'Acme Dental',
+    name: 'Intelligent Automation',
     searchImprShare: '31.00%',
     status: 'PAUSED',
     network: 'SEARCH NETWO...',
@@ -63,7 +63,7 @@ const campaignsData = [
     conversionRate: '8.74%',
   },
   {
-    name: 'Acme Marketing',
+    name: 'Cloud and Data',
     searchImprShare: '31.00%',
     status: 'PAUSED',
     network: 'SEARCH NETWO...',
@@ -73,7 +73,7 @@ const campaignsData = [
     conversionRate: '9.05%',
   },
   {
-    name: 'Acme Auto Body',
+    name: 'Digital Products and Platforms',
     searchImprShare: '29.00%',
     status: 'PAUSED',
     network: 'DISPLAY NETW...',
@@ -140,16 +140,16 @@ export default function GoogleAdsPage() {
             </ResponsiveContainer>
           </div>
 
-          {/* Clicks by Campaign - Bar Chart */}
+          {/* Leads by Campaign - Bar Chart */}
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">Clicks</h2>
-                <div className="text-3xl font-bold text-gray-900 mt-2">240</div>
+                <h2 className="text-lg font-semibold text-gray-900">Leads</h2>
+                <div className="text-3xl font-bold text-gray-900 mt-2">236</div>
               </div>
             </div>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={clicksByCampaignData}>
+              <BarChart data={leadsByCampaignData}>
                 <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
                 <XAxis 
                   dataKey="campaign" 
@@ -167,7 +167,7 @@ export default function GoogleAdsPage() {
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
                 />
                 <Bar 
-                  dataKey="clicks" 
+                  dataKey="leads" 
                   fill="#4285F4" 
                   radius={[4, 4, 0, 0]}
                   barSize={40}
