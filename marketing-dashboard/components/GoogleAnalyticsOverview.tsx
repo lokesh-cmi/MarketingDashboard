@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 interface AnalyticsData {
   month: string;
@@ -74,7 +76,16 @@ export default function GoogleAnalyticsOverview() {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Google Analytics Overview</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">Google Analytics Overview</h2>
+        <Link 
+          href="/analytics"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+        >
+          View More
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
       
       <div className="grid grid-cols-4 gap-6 mb-6">
         <div>

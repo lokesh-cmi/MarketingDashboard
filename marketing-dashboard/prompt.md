@@ -152,6 +152,45 @@ now i want to install googleapis and i have already added necessary information 
 
 ---
 
+## Prompt 6: Add View More Buttons and Detail Pages
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+In both google Analytics overview and search Console overview, keep a "View More" button next to headings which onClick route to specific pages
+```
+
+**Result**:
+- Updated `/components/GoogleAnalyticsOverview.tsx`
+  - Added "View More" button with ChevronRight icon next to heading
+  - Links to `/analytics` page
+  - Styled with blue color and hover effects
+- Updated `/components/SearchConsoleOverview.tsx`
+  - Added "View More" button with ChevronRight icon next to heading
+  - Links to `/search-console` page
+  - Styled with blue color and hover effects
+- Created `/app/analytics/page.tsx` - Detailed Google Analytics page
+  - Full-page analytics view with back button
+  - Enhanced summary cards with descriptions
+  - Multiple charts: Sessions Over Time, All Metrics Comparison
+  - Monthly breakdown data table
+  - Uses same API endpoint as overview component
+- Created `/app/search-console/page.tsx` - Detailed Search Console page
+  - Full-page search console view with back button
+  - Enhanced summary cards with descriptions
+  - Multiple charts: Impressions & Clicks, CTR trends
+  - Monthly breakdown data table
+  - Uses same API endpoint as overview component
+- Both detail pages include:
+  - Back to Dashboard navigation
+  - Large summary cards
+  - Multiple chart visualizations
+  - Detailed data tables
+  - Responsive design
+  - Same data fetching logic as overview components
+
+---
+
 ## Project Summary
 
 ### Tech Stack

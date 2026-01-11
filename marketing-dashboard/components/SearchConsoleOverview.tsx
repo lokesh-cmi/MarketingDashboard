@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, ComposedChart } from 'recharts';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 interface SearchConsoleData {
   date: string;
@@ -81,7 +83,16 @@ export default function SearchConsoleOverview() {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Search Console Overview</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">Search Console Overview</h2>
+        <Link 
+          href="/search-console"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+        >
+          View More
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
       
       <div className="grid grid-cols-4 gap-6 mb-6">
         <div>
