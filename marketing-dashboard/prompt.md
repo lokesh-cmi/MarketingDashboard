@@ -396,3 +396,161 @@ The header and background should be applied same for the dashboard and all the r
 - Charts are interactive with tooltips
 - Metrics include trend indicators (positive/negative)
 - Currently uses static data - ready for API integration
+
+
+---
+
+## Prompt 10: Database Infrastructure Setup
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+can you please make the necessary changes that you have mentioned now
+create all the necessary infra needed as a free tier and install the necessary dependencies from npm
+```
+
+**Context**:
+- User requested database infrastructure setup
+- Requirements: Free tier, no external services, fully functional
+
+**Result**:
+
+### Dependencies Installed
+- `@prisma/client@7.2.0` - Prisma ORM client
+- `prisma@7.2.0` - Prisma CLI
+- `@prisma/adapter-libsql` - SQLite adapter for Prisma
+- `@libsql/client` - LibSQL client library
+- `node-cron@4.2.1` - For scheduled tasks
+- `tsx@4.21.0` - TypeScript execution
+- `dotenv` - Environment variable management
+
+### Database Schema Created
+Created comprehensive Prisma schema (`prisma/schema.prisma`) with 13 tables:
+
+**Analytics Tables:**
+- `GoogleAnalytics` - Sessions, users, page views, engagement rate
+- `SearchConsole` - Impressions, clicks, CTR, position
+
+**SEMrush Tables:**
+- `SemrushKeyword` - Keyword tracking with positions and visibility
+- `SemrushSiteHealth` - Site health scores, errors, warnings
+
+**Advertising Tables:**
+- `LinkedInAds` - LinkedIn ad metrics (clicks, spend, impressions, conversions)
+- `GoogleAds` - Google Ads performance data
+- `GoogleAdsCampaign` - Campaign details and metrics
+
+**CRM Tables:**
+- `HubSpotContact` - Contact lifecycle stages
+- `HubSpotDeals` - Deals pipeline and revenue
+
+**Social Media Tables:**
+- `OktopostSocialMedia` - Multi-platform analytics (LinkedIn, Instagram, Facebook, Twitter)
+
+**System Tables:**
+- `Cache` - API response caching with TTL
+- `SearchIndex` - Full-text search capabilities
+
+### Files Created
+
+1. **`prisma/schema.prisma`**
+   - Complete database schema
+   - All indexes defined
+   - SQLite as provider
+
+2. **`prisma.config.ts`**
+   - Auto-generated Prisma configuration
+   - Database URL from environment
+
+3. **`lib/database/client.ts`**
+   - Prisma Client singleton
+   - Proper adapter configuration
+   - Development/production handling
+
+4. **`lib/database/cache.ts`**
+   - `getCachedData()` - Retrieve cached data
+   - `setCachedData()` - Store with TTL
+   - `deleteCachedData()` - Remove specific cache
+   - `clearExpiredCache()` - Cleanup expired entries
+   - `clearAllCache()` - Full cache reset
+
+5. **`prisma/seed.ts`**
+   - Comprehensive seed script
+   - Imports all mock data from `lib/mock-data/`
+   - Seeds:
+     - 30 days of LinkedIn Ads data
+     - 7 days of Google Ads data
+     - 4 Google Ads campaigns
+     - 50 SEMrush keywords
+     - Site health metrics
+     - 30 days of social media data (4 platforms)
+     - Search index entries
+
+6. **`DATABASE_SETUP.md`**
+   - Complete documentation
+   - Getting started guide
+   - Usage examples
+   - Troubleshooting section
+
+### Database Initialized
+- Database file: `/dev.db`
+- Migration created: `20260111162239_init`
+- All tables created successfully
+- Database seeded with realistic mock data
+
+### Package.json Scripts Added
+```json
+{
+  "db:seed": "tsx prisma/seed.ts",
+  "db:migrate": "prisma migrate dev",
+  "db:studio": "prisma studio",
+  "db:generate": "prisma generate"
+}
+```
+
+### Gitignore Updated
+Added database files to `.gitignore`:
+- `*.db`
+- `*.db-journal`
+- `prisma/*.db`
+- `prisma/*.db-journal`
+
+### Technical Implementation Details
+
+**Prisma 7 Compatibility:**
+- Removed `url` from schema datasource (now in prisma.config.ts)
+- Using `PrismaLibSql` adapter (note: case-sensitive)
+- Adapter initialized with config object
+
+**Data Seeding:**
+- Successfully seeded all mock data from existing files
+- LinkedIn Ads: 30 data points
+- Google Ads: 7 data points + 4 campaigns
+- SEMrush: 50 keywords + site health
+- Social Media: 120 data points (30 days × 4 platforms)
+- Search Index: 54 entries (50 keywords + 4 campaigns)
+
+**Cache System:**
+- Built-in caching layer ready
+- TTL-based expiration
+- Automatic cleanup functions
+- JSON serialization for complex data
+
+### Next Steps (Ready to Implement)
+1. Replace mock data imports with database queries
+2. Implement caching for API responses
+3. Add scheduled data refresh using node-cron
+4. Create API routes that use the database
+5. Implement search functionality using SearchIndex
+
+### Database Ready ✓
+- ✅ SQLite database created
+- ✅ All tables migrated
+- ✅ Mock data seeded
+- ✅ Cache system ready
+- ✅ Search index populated
+- ✅ Prisma Client generated
+- ✅ TypeScript types available
+
+**Free tier infrastructure complete!** No external services required. Zero monthly costs.
+

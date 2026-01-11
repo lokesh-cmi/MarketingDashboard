@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Google Analytics Data
+model GoogleAnalytics {
+  id             Int      @id @default(autoincrement())
+  date           DateTime
+  sessions       Int
+  users          Int
+  pageViews      Int
+  engagementRate Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Search Console Data
+model SearchConsole {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  impressions Int
+  clicks      Int
+  ctr         Float
+  position    Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+// SEMrush Keywords
+model SemrushKeyword {
+  id         Int      @id @default(autoincrement())
+  keyword    String
+  position   Int
+  change     Int
+  visibility String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([keyword])
+}
+
+// SEMrush Site Health
+model SemrushSiteHealth {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @default(now())
+  score     Int
+  errors    Int
+  warnings  Int
+  notices   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// LinkedIn Ads Data
+model LinkedInAds {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  clicks      Int
+  spend       Float
+  impressions Int
+  conversions Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Google Ads Data
+model GoogleAds {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  clicks      Int
+  cost        Float
+  conversions Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Google Ads Campaigns
+model GoogleAdsCampaign {
+  id               Int      @id @default(autoincrement())
+  name             String
+  searchImprShare  String
+  status           String
+  network          String
+  viewThroughConv  Int
+  avgCPC           String
+  clicks           Int
+  conversionRate   String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([name])
+}
+
+// HubSpot Data
+model HubSpotContact {
+  id        Int      @id @default(autoincrement())
+  stage     String
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HubSpotDeals {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  count     Int
+  amount    Float
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Oktopost Social Media Data
+model OktopostSocialMedia {
+  id          Int      @id @default(autoincrement())
+  platform    String // LinkedIn, Instagram, Facebook, Twitter
+  date        DateTime
+  followers   Int
+  impressions Int?
+  engagement  Int
+  clicks      Int?
+  shares      Int?
+  likes       Int?
+  comments    Int?
+  saves       Int?
+  reach       Int?
+  reactions   Int?
+  retweets    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([platform, date])
+}
+
+// Cache Table for API responses
+model Cache {
+  key       String   @id
+  value     String // JSON stringified data
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+}
+
+// Search Index for full-text search
+model SearchIndex {
+  id        Int      @id @default(autoincrement())
+  type      String // 'keyword', 'campaign', 'metric', etc.
+  title     String
+  content   String // Searchable content
+  metadata  String? // JSON stringified additional data
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([title])
+}

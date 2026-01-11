@@ -42,3 +42,15 @@ service-account/*.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+/lib/generated/prisma
+*.db
+*.db-journal
+prisma/*.db
+prisma/*.db-journal
+# database files
+*.db
+*.db-journal
+prisma/*.db
+prisma/*.db-journal

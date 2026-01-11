@@ -6,13 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.1",
+    "@libsql/client": "^0.17.0",
+    "@prisma/adapter-libsql": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "dotenv": "^17.2.3",
     "googleapis": "^170.0.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
+    "node-cron": "^4.2.1",
+    "prisma": "^7.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.6.0"
@@ -25,6 +38,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
