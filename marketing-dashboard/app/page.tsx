@@ -1,15 +1,55 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, Target, Share2 } from 'lucide-react';
 import MetricCard from '@/components/MetricCard';
 import CategoryCard from '@/components/CategoryCard';
 import GoogleAnalyticsOverview from '@/components/GoogleAnalyticsOverview';
 import SearchConsoleOverview from '@/components/SearchConsoleOverview';
-import CampaignOverview from '@/components/CampaignOverview';
-import AdReportOverview from '@/components/AdReportOverview';
+import HubSpotOverview from '@/components/HubSpotOverview';
+import SEMrushOverview from '@/components/SEMrushOverview';
+import LinkedInAdsOverview from '@/components/LinkedInAdsOverview';
+import GoogleAdsOverview from '@/components/GoogleAdsOverview';
+import OktopostOverview from '@/components/OktopostOverview';
+
+type CategoryType = 'seo' | 'paid-campaigns' | 'social-media';
 
 export default function Home() {
+  const [activeCategory, setActiveCategory] = useState<CategoryType>('seo');
+
+  const renderOverviews = () => {
+    switch (activeCategory) {
+      case 'seo':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <GoogleAnalyticsOverview />
+              <SearchConsoleOverview />
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <HubSpotOverview />
+              <SEMrushOverview />
+            </div>
+          </>
+        );
+      case 'paid-campaigns':
+        return (
+          <div className="grid grid-cols-2 gap-6">
+            <LinkedInAdsOverview />
+            <GoogleAdsOverview />
+          </div>
+        );
+      case 'social-media':
+        return (
+          <div className="grid grid-cols-2 gap-6">
+            <OktopostOverview />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-8">
@@ -51,7 +91,7 @@ export default function Home() {
                 isPositive={true}
               />
             </div>
-        </div>
+          </div>
 
           {/* Category Cards */}
           <div className="grid grid-cols-3 gap-6 mb-6">
@@ -59,31 +99,28 @@ export default function Home() {
               icon={<Search className="w-6 h-6" />}
               title="SEO"
               description="Organic traffic & search performance"
+              isActive={activeCategory === 'seo'}
+              onClick={() => setActiveCategory('seo')}
             />
             <CategoryCard
               icon={<Target className="w-6 h-6" />}
               title="Paid Campaigns"
               description="Google Ads & paid acquisition"
+              isActive={activeCategory === 'paid-campaigns'}
+              onClick={() => setActiveCategory('paid-campaigns')}
             />
             <CategoryCard
               icon={<Share2 className="w-6 h-6" />}
               title="Social Media"
               description="Organic & paid social performance"
+              isActive={activeCategory === 'social-media'}
+              onClick={() => setActiveCategory('social-media')}
             />
           </div>
         </div>
 
-        {/* Analytics Section */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          <GoogleAnalyticsOverview />
-          <SearchConsoleOverview />
-        </div>
-
-        {/* Campaign and Ad Report Section */}
-        <div className="grid grid-cols-2 gap-6">
-          <CampaignOverview />
-          <AdReportOverview />
-        </div>
+        {/* Dynamic Overview Section */}
+        {renderOverviews()}
       </div>
     </div>
   );

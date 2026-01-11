@@ -191,6 +191,118 @@ In both google Analytics overview and search Console overview, keep a "View More
 
 ---
 
+## Prompt 7: Category-Based Overview Switching
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+I want to add a feature where the current four tiles Google analytics Overview, search console Overview, hubspot overview, semrush overview visible when SEO is selected by default on landing. When clicked on paid campaigns, i want to show two tiles - linkedin ads overview and google ads overview. On click of social media it should show oktopost overview.
+```
+
+**Result**:
+- Updated `/app/page.tsx` - Added category switching functionality
+  - Added `useState` hook for active category tracking
+  - Default category is 'seo'
+  - `renderOverviews()` function to dynamically display overview components based on selected category
+  - Three category states: 'seo', 'paid-campaigns', 'social-media'
+  
+- Updated `/components/CategoryCard.tsx`
+  - Added `isActive` prop for active state styling
+  - Added `onClick` prop for click handling
+  - Active state shows blue background and blue border
+  - Visual feedback on selection
+  
+- Created **SEO Category Components** (4 tiles):
+  - `/components/HubSpotOverview.tsx` - HubSpot metrics (Contacts, Deals, Email Campaigns, Conversion Rate)
+  - `/components/SEMrushOverview.tsx` - SEMrush metrics (Organic Keywords, Traffic, Backlinks, Domain Authority)
+  - Existing: GoogleAnalyticsOverview.tsx, SearchConsoleOverview.tsx
+  
+- Created **Paid Campaigns Category Components** (2 tiles):
+  - `/components/LinkedInAdsOverview.tsx` - LinkedIn Ads (Impressions, Clicks, Conversions, Spend)
+  - `/components/GoogleAdsOverview.tsx` - Google Ads (Impressions, Clicks, Conversions, Cost)
+  
+- Created **Social Media Category Components** (1 tile):
+  - `/components/OktopostOverview.tsx` - Oktopost metrics (Posts, Engagement, Reach, CTR)
+
+**Behavior**:
+- **SEO (Default)**: Shows 4 overview tiles in 2x2 grid
+  - Google Analytics Overview
+  - Search Console Overview  
+  - HubSpot Overview
+  - SEMrush Overview
+  
+- **Paid Campaigns**: Shows 2 overview tiles in 2x1 grid
+  - LinkedIn Ads Overview
+  - Google Ads Overview
+  
+- **Social Media**: Shows 1 overview tile
+  - Oktopost Overview
+
+**Features**:
+- Category cards are clickable with visual feedback
+- Active category has blue background and border
+- Smooth transitions between views
+- Each overview component has placeholder data and "coming soon" message
+- Maintains consistent card styling across all overviews
+
+---
+
+## Prompt 8: LinkedIn Ads Detailed View with Mock Data
+**Date**: January 11, 2026
+
+**Prompt**:
+```
+Create a mock data for Linkedin Ads overview and provide a graph. Add view more button and on click open a route and provide data as of in the image
+```
+
+**Result**:
+- Updated `/components/LinkedInAdsOverview.tsx`
+  - Added mock data for 6 months (Jan-Jun)
+  - Metrics: Total Spend, Avg CPC, Total Clicks, Total Conversions
+  - Bar chart showing Spend and Clicks by month
+  - LinkedIn brand colors (#0077B5, #00A0DC)
+  - Added "View More" button linking to `/linkedin-ads`
+  
+- Created `/app/linkedin-ads/page.tsx` - Detailed LinkedIn Ads page
+  - **Header**: "LinkedIn: Organic vs Paid" with description
+  - **Date Range Selector**: Dropdown for Last 7/30/90 Days
+  - **Action Buttons**: Add Report, Save
+  
+  - **Top 4 Metric Cards**:
+    - LinkedIn Ad Spend ($4.4K) with mini chart
+    - Avg CPC (€1) with mini chart
+    - Paid Avg CTR (1.12%) with mini chart
+    - Organic CTR (8.36%) with mini chart
+    - Each card shows percentage change with trending arrows
+  
+  - **Ad to Click Section**:
+    - Summary metrics: Reach (168,967), Engagements (3,072), Clicks (2,693), Engagement Rate (0.65)
+    - Stacked area chart showing 30 days of data
+    - Three ad types: Sponsored Video, Sponsored Message, Sponsored Status Update
+    - Blue color gradient for different ad types
+  
+  - **Post to Click Section**:
+    - Summary metrics: Reach (970), Engagements (52), Clicks (25), Engagement Rate (0.92)
+    - Stacked area chart showing 30 days of data
+    - Six post types: GIF, Gallery, Image, Link, Text, Video
+    - Color-coded by post type with legend
+
+**Design Features**:
+- Matching the uploaded image layout
+- Clean metric cards with trend indicators
+- Stacked area charts for visual comparison
+- Color-coded legends for ad/post types
+- Responsive grid layout
+- Professional LinkedIn brand styling
+
+**Mock Data Structure**:
+- 30 days of daily data for charts
+- Stacked data showing how different ad types perform
+- Realistic engagement metrics
+- Percentage changes and trend indicators
+
+---
+
 ## Project Summary
 
 ### Tech Stack
