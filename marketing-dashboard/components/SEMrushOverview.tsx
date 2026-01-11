@@ -9,7 +9,7 @@ import {
   top20KeywordsData, 
   top100KeywordsData,
   siteHealthData 
-} from '@/lib/semrushData';
+} from '@/lib/mock-data/semrushData';
 
 export default function SEMrushOverview() {
   return (
@@ -17,7 +17,7 @@ export default function SEMrushOverview() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">SEMrush Overview</h2>
         <Link 
-          href="/semrush"
+          href="/semrush?category=seo"
           className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
         >
           View More

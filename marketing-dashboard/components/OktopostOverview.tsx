@@ -11,7 +11,7 @@ import {
   facebookTimeSeriesData,
   twitterMetrics,
   twitterTimeSeriesData
-} from '@/lib/oktopostData';
+} from '@/lib/mock-data/oktopostData';
 
 export default function OktopostOverview() {
   const formatNumber = (num: number) => {

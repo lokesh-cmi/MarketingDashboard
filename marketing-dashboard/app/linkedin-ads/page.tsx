@@ -1,9 +1,55 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
+
+// Mini chart data for metric cards - showing realistic trends matching percentage changes
+const adSpendMiniData = [
+  { value: 3600 },
+  { value: 3750 },
+  { value: 3850 },
+  { value: 3950 },
+  { value: 4100 },
+  { value: 4200 },
+  { value: 4300 },
+  { value: 4400 },
+]; // Upward trend for +22%
+
+const avgCpcMiniData = [
+  { value: 1.52 },
+  { value: 1.45 },
+  { value: 1.38 },
+  { value: 1.28 },
+  { value: 1.18 },
+  { value: 1.12 },
+  { value: 1.05 },
+  { value: 1.00 },
+]; // Downward trend for -34%
+
+const paidCtrMiniData = [
+  { value: 0.56 },
+  { value: 0.65 },
+  { value: 0.75 },
+  { value: 0.82 },
+  { value: 0.92 },
+  { value: 1.00 },
+  { value: 1.08 },
+  { value: 1.12 },
+]; // Upward trend for +99%
+
+const organicCtrMiniData = [
+  { value: 83.6 },
+  { value: 68.5 },
+  { value: 55.2 },
+  { value: 42.8 },
+  { value: 28.5 },
+  { value: 18.2 },
+  { value: 12.5 },
+  { value: 8.36 },
+]; // Strong downward trend for -90%
 
 // More realistic mock data for Ad to Click - showing gradual decline typical of ad campaigns
 const adToClickData = [
@@ -74,6 +120,8 @@ const postToClickData = [
 ];
 
 export default function LinkedInAdsPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'paid-campaigns';
   const [dateRange, setDateRange] = useState('Last 30 Days');
 
   return (
@@ -82,7 +130,7 @@ export default function LinkedInAdsPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/"
+            href={`/?category=${category}`}
             className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -91,7 +139,7 @@ export default function LinkedInAdsPage() {
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">LinkedIn: Organic vs Paid</h1>
+              <h1 className="text-3xl font-bold text-gray-900">LinkedIn Ads Overview</h1>
               <p className="text-gray-600 mt-2">📊 Analyze how owned and earned LinkedIn activities stack up against paid</p>
             </div>
             <div className="flex items-center gap-4">
@@ -122,8 +170,8 @@ export default function LinkedInAdsPage() {
             <div className="text-xs text-gray-500 mb-3">Cost (USD)</div>
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
-                <AreaChart data={adToClickData.slice(0, 10)}>
-                  <Area type="monotone" dataKey="sponsoredVideo" stroke="#60A5FA" fill="#93C5FD" fillOpacity={0.4} />
+                <AreaChart data={adSpendMiniData}>
+                  <Area type="monotone" dataKey="value" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -141,8 +189,8 @@ export default function LinkedInAdsPage() {
             <div className="text-xs text-gray-500 mb-3">Avg CPC</div>
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
-                <AreaChart data={adToClickData.slice(0, 10)}>
-                  <Area type="monotone" dataKey="sponsoredMessage" stroke="#60A5FA" fill="#93C5FD" fillOpacity={0.4} />
+                <AreaChart data={avgCpcMiniData}>
+                  <Area type="monotone" dataKey="value" stroke="#EF4444" fill="#EF4444" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -160,8 +208,8 @@ export default function LinkedInAdsPage() {
             <div className="text-xs text-gray-500 mb-3">Avg CTR</div>
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
-                <AreaChart data={adToClickData.slice(0, 10)}>
-                  <Area type="monotone" dataKey="sponsoredUpdate" stroke="#60A5FA" fill="#93C5FD" fillOpacity={0.4} />
+                <AreaChart data={paidCtrMiniData}>
+                  <Area type="monotone" dataKey="value" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -179,8 +227,8 @@ export default function LinkedInAdsPage() {
             <div className="text-xs text-gray-500 mb-3">Click-Through Rate</div>
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
-                <AreaChart data={postToClickData.slice(0, 10)}>
-                  <Area type="monotone" dataKey="image" stroke="#84CC16" fill="#BEF264" fillOpacity={0.4} />
+                <AreaChart data={organicCtrMiniData}>
+                  <Area type="monotone" dataKey="value" stroke="#EF4444" fill="#EF4444" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

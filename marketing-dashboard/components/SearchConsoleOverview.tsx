@@ -86,7 +86,7 @@ export default function SearchConsoleOverview() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Search Console Overview</h2>
         <Link 
-          href="/search-console"
+          href="/search-console?category=seo"
           className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
         >
           View More

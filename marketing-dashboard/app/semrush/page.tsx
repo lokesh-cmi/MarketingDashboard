@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
@@ -17,9 +18,11 @@ import {
   topKeywords,
   siteHealthData,
   seoCheckerData
-} from '@/lib/semrushData';
+} from '@/lib/mock-data/semrushData';
 
 export default function SEMrushPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'seo';
   const [dateRange, setDateRange] = useState('Last 30 Days');
 
   return (
@@ -28,7 +31,7 @@ export default function SEMrushPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/"
+            href={`/?category=${category}`}
             className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -395,33 +398,35 @@ export default function SEMrushPage() {
             {/* Top Keywords Table */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-4">Top Keywords</h3>
-              <div className="space-y-1">
-                <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 font-medium pb-2 border-b">
-                  <div>Keywords</div>
-                  <div className="text-center">Position</div>
-                  <div className="text-right">Visibility</div>
-                </div>
-                {topKeywords.map((keyword, index) => (
-                  <div key={index} className="grid grid-cols-3 gap-2 py-2 border-b border-gray-100 items-center">
-                    <div className="text-xs text-blue-600 hover:underline cursor-pointer truncate" title={keyword.keyword}>
-                      {keyword.keyword}
-                    </div>
-                    <div className="flex items-center justify-center gap-1 text-xs">
-                      <span className="font-medium">{keyword.position}</span>
-                      {keyword.change > 0 && (
-                        <span className="text-green-600">{keyword.change}</span>
-                      )}
-                      {keyword.change === 0 && (
-                        <span className="text-gray-400">{keyword.change}</span>
-                      )}
-                    </div>
-                    <div className="text-right text-xs text-gray-600">{keyword.visibility}</div>
+              <div className="max-h-[280px] overflow-y-auto border border-gray-200 rounded-lg">
+                <div className="space-y-1">
+                  <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 font-medium pb-2 border-b sticky top-0 bg-white z-10 px-3 pt-2">
+                    <div>Keywords</div>
+                    <div className="text-center">Position</div>
+                    <div className="text-right">Visibility</div>
                   </div>
-                ))}
+                  {topKeywords.map((keyword, index) => (
+                    <div key={index} className="grid grid-cols-3 gap-2 py-2 border-b border-gray-100 items-center px-3 hover:bg-gray-50">
+                      <div className="text-xs text-blue-600 hover:underline cursor-pointer truncate" title={keyword.keyword}>
+                        {keyword.keyword}
+                      </div>
+                      <div className="flex items-center justify-center gap-1 text-xs">
+                        <span className="font-medium text-gray-900">{keyword.position}</span>
+                        {keyword.change > 0 && (
+                          <span className="text-green-600 font-bold">↑</span>
+                        )}
+                        {keyword.change < 0 && (
+                          <span className="text-red-600 font-bold">↓</span>
+                        )}
+                        {keyword.change === 0 && (
+                          <span className="text-gray-400">−</span>
+                        )}
+                      </div>
+                      <div className="text-right text-xs text-gray-600">{keyword.visibility}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <button className="w-full mt-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
-                View full report
-              </button>
             </div>
           </div>
         </div>
@@ -499,10 +504,6 @@ export default function SEMrushPage() {
                 <div className="bg-red-500 flex-[5]"></div>
               </div>
             </div>
-
-            <button className="w-full mt-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
-              View full report
-            </button>
           </div>
 
           {/* On Page SEO Checker Section */}
@@ -566,10 +567,6 @@ export default function SEMrushPage() {
                 ))}
               </div>
             </div>
-
-            <button className="w-full mt-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
-              View full report
-            </button>
           </div>
         </div>
       </div>

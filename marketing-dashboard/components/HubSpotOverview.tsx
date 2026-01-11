@@ -4,7 +4,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { contactLifecycleData, dealsMetrics } from '@/lib/hubspotData';
+import { contactLifecycleData, dealsMetrics } from '@/lib/mock-data/hubspotData';
 
 export default function HubSpotOverview() {
   return (
@@ -12,7 +12,7 @@ export default function HubSpotOverview() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">HubSpot Overview</h2>
         <Link 
-          href="/hubspot"
+          href="/hubspot?category=seo"
           className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
         >
           View More

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Target, Share2 } from 'lucide-react';
 import MetricCard from '@/components/MetricCard';
 import CategoryCard from '@/components/CategoryCard';
@@ -15,7 +16,23 @@ import OktopostOverview from '@/components/OktopostOverview';
 type CategoryType = 'seo' | 'paid-campaigns' | 'social-media';
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<CategoryType>('seo');
+
+  // Read category from URL on mount
+  useEffect(() => {
+    const categoryParam = searchParams.get('category') as CategoryType;
+    if (categoryParam && ['seo', 'paid-campaigns', 'social-media'].includes(categoryParam)) {
+      setActiveCategory(categoryParam);
+    }
+  }, [searchParams]);
+
+  // Update URL when category changes
+  const handleCategoryChange = (category: CategoryType) => {
+    setActiveCategory(category);
+    router.push(`/?category=${category}`);
+  };
 
   const renderOverviews = () => {
     switch (activeCategory) {
@@ -100,21 +117,21 @@ export default function Home() {
               title="SEO"
               description="Organic traffic & search performance"
               isActive={activeCategory === 'seo'}
-              onClick={() => setActiveCategory('seo')}
+              onClick={() => handleCategoryChange('seo')}
             />
             <CategoryCard
               icon={<Target className="w-6 h-6" />}
               title="Paid Campaigns"
               description="Google Ads & paid acquisition"
               isActive={activeCategory === 'paid-campaigns'}
-              onClick={() => setActiveCategory('paid-campaigns')}
+              onClick={() => handleCategoryChange('paid-campaigns')}
             />
             <CategoryCard
               icon={<Share2 className="w-6 h-6" />}
               title="Social Media"
               description="Organic & paid social performance"
               isActive={activeCategory === 'social-media'}
-              onClick={() => setActiveCategory('social-media')}
+              onClick={() => handleCategoryChange('social-media')}
             />
           </div>
         </div>

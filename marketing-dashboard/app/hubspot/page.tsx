@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { totalDealsSourceData, wonDealsSourceData, dealsBreakdown } from '@/lib/hubspotDetailData';
-import { dealsMetrics } from '@/lib/hubspotData';
+import { totalDealsSourceData, wonDealsSourceData, dealsBreakdown } from '@/lib/mock-data/hubspotDetailData';
+import { dealsMetrics } from '@/lib/mock-data/hubspotData';
 
 export default function HubSpotPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'seo';
   const [dateRange, setDateRange] = useState('Last 30 Days');
 
   const formatCurrency = (value: number) => {
@@ -25,7 +28,7 @@ export default function HubSpotPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/"
+            href={`/?category=${category}`}
             className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />

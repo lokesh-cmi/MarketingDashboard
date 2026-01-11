@@ -4,21 +4,12 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-
-const mockData = [
-  { date: 'Dec 8', clicks: 48, cost: 410, conversions: 22 },
-  { date: 'Dec 12', clicks: 52, cost: 445, conversions: 24 },
-  { date: 'Dec 16', clicks: 45, cost: 385, conversions: 20 },
-  { date: 'Dec 20', clicks: 58, cost: 495, conversions: 27 },
-  { date: 'Dec 24', clicks: 51, cost: 436, conversions: 23 },
-  { date: 'Dec 28', clicks: 62, cost: 530, conversions: 29 },
-  { date: 'Jan 1', clicks: 55, cost: 470, conversions: 25 },
-];
+import { googleAdsOverviewData } from '@/lib/mock-data/googleAdsData';
 
 export default function GoogleAdsOverview() {
-  const totalClicks = mockData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalCost = mockData.reduce((sum, item) => sum + item.cost, 0);
-  const totalConversions = mockData.reduce((sum, item) => sum + item.conversions, 0);
+  const totalClicks = googleAdsOverviewData.reduce((sum, item) => sum + item.clicks, 0);
+  const totalCost = googleAdsOverviewData.reduce((sum, item) => sum + item.cost, 0);
+  const totalConversions = googleAdsOverviewData.reduce((sum, item) => sum + item.conversions, 0);
   const avgCPC = totalCost / totalClicks;
 
   return (
@@ -26,7 +17,7 @@ export default function GoogleAdsOverview() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Google Ads Overview</h2>
         <Link 
-          href="/google-ads"
+          href="/google-ads?category=paid-campaigns"
           className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
         >
           View More
@@ -54,7 +45,7 @@ export default function GoogleAdsOverview() {
       </div>
 
       <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={mockData}>
+        <LineChart data={googleAdsOverviewData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
           <YAxis tick={{ fontSize: 12 }} stroke="#999" />

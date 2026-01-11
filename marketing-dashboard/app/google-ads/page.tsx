@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -85,6 +86,8 @@ const campaignsData = [
 ];
 
 export default function GoogleAdsPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'paid-campaigns';
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter campaigns based on search query
@@ -100,7 +103,7 @@ export default function GoogleAdsPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/"
+            href={`/?category=${category}`}
             className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />

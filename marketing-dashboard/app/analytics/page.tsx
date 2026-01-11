@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
@@ -35,6 +36,8 @@ const DEVICE_COLORS: { [key: string]: string } = {
 };
 
 export default function AnalyticsPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'seo';
   const [data, setData] = useState<DetailedAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +99,7 @@ export default function AnalyticsPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/"
+            href={`/?category=${category}`}
             className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
