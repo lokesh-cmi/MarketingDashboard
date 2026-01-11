@@ -1,35 +1,121 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
+import { 
+  top3KeywordsData, 
+  top10KeywordsData, 
+  top20KeywordsData, 
+  top100KeywordsData,
+  siteHealthData 
+} from '@/lib/semrushData';
 
 export default function SEMrushOverview() {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">SEMrush Overview</h2>
+        <Link 
+          href="/semrush"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          View More
+          <ChevronRight className="w-4 h-4" />
+        </Link>
       </div>
       
-      <div className="grid grid-cols-4 gap-6 mb-6">
+      {/* Keywords and Site Health Side by Side */}
+      <div className="grid grid-cols-2 gap-6">
+        {/* Keywords Section - Text Only */}
         <div>
-          <div className="text-sm text-gray-500 mb-1">Organic Keywords</div>
-          <div className="text-2xl font-semibold text-gray-900">8,234</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500 mb-1">Organic Traffic</div>
-          <div className="text-2xl font-semibold text-gray-900">45.2K</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500 mb-1">Backlinks</div>
-          <div className="text-2xl font-semibold text-gray-900">1,892</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500 mb-1">Domain Authority</div>
-          <div className="text-2xl font-semibold text-gray-900">68</div>
-        </div>
-      </div>
+          <h3 className="text-sm font-medium text-gray-700 mb-4">Keywords</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {/* Top 3 Keywords */}
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-baseline gap-2">
+                <div className="text-xs text-gray-600">Top 3</div>
+                <div className="text-xl font-bold text-gray-900">12</div>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <div className="text-xs text-green-600">new 3</div>
+                <div className="text-xs text-red-600">lost 1</div>
+              </div>
+            </div>
 
-      <div className="flex items-center justify-center h-48 bg-gray-50 rounded-lg">
-        <p className="text-gray-500">SEMrush integration coming soon...</p>
+            {/* Top 10 Keywords */}
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-baseline gap-2">
+                <div className="text-xs text-gray-600">Top 10</div>
+                <div className="text-xl font-bold text-gray-900">18</div>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <div className="text-xs text-green-600">new 4</div>
+                <div className="text-xs text-red-600">lost 3</div>
+              </div>
+            </div>
+
+            {/* Top 20 Keywords */}
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-baseline gap-2">
+                <div className="text-xs text-gray-600">Top 20</div>
+                <div className="text-xl font-bold text-gray-900">28</div>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <div className="text-xs text-green-600">new 7</div>
+                <div className="text-xs text-red-600">lost 5</div>
+              </div>
+            </div>
+
+            {/* Top 100 Keywords */}
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-baseline gap-2">
+                <div className="text-xs text-gray-600">Top 100</div>
+                <div className="text-xl font-bold text-gray-900">79</div>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <div className="text-xs text-green-600">new 8</div>
+                <div className="text-xs text-red-600">lost 6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Site Health Section */}
+        <div>
+          <h3 className="text-sm font-medium text-gray-700 mb-4">Site Health</h3>
+          
+          <div className="flex justify-center">
+            <div className="relative inline-flex items-center justify-center">
+              <svg className="w-32 h-32 transform -rotate-90">
+                {/* Background circle */}
+                <circle
+                  cx="64"
+                  cy="64"
+                  r="52"
+                  stroke="#E5E7EB"
+                  strokeWidth="12"
+                  fill="none"
+                />
+                {/* Progress circle */}
+                <circle
+                  cx="64"
+                  cy="64"
+                  r="52"
+                  stroke="#84CC16"
+                  strokeWidth="12"
+                  fill="none"
+                  strokeDasharray={`${(siteHealthData.score / 100) * 326.73} 326.73`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-4xl font-bold text-gray-900">{siteHealthData.score}%</div>
+                <div className="text-sm text-red-600">{siteHealthData.change}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
