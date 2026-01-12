@@ -11,8 +11,13 @@ import HubSpotOverview from '@/components/HubSpotOverview';
 import SEMrushOverview from '@/components/SEMrushOverview';
 import LinkedInAdsOverview from '@/components/LinkedInAdsOverview';
 import GoogleAdsOverview from '@/components/GoogleAdsOverview';
-import OktopostOverview from '@/components/OktopostOverview';
+import LinkedInPerformance from '@/components/LinkedInPerformance';
+import InstagramPerformance from '@/components/InstagramPerformance';
+import FacebookPerformance from '@/components/FacebookPerformance';
+import TwitterPerformance from '@/components/TwitterPerformance';
+import DraggableTile from '@/components/DraggableTile';
 import { useDateRange } from '@/contexts/DateRangeContext';
+import { getTileConfig, reorderTiles, toggleTilePin, Category, TileConfig } from '@/lib/tile-order';
 
 type CategoryType = 'seo' | 'paid-campaigns' | 'social-media';
 
@@ -23,6 +28,31 @@ export default function Home() {
   const { dateRange, getDateRangeInDays } = useDateRange();
   const [metrics, setMetrics] = useState<any>(null);
   const [metricsLoading, setMetricsLoading] = useState(true);
+  
+  // Drag and drop state
+  const [tiles, setTiles] = useState<TileConfig[]>([]);
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  // Component mapping
+  const componentMap: Record<string, React.ComponentType> = {
+    GoogleAnalyticsOverview,
+    SearchConsoleOverview,
+    HubSpotOverview,
+    SEMrushOverview,
+    LinkedInAdsOverview,
+    GoogleAdsOverview,
+    LinkedInPerformance,
+    InstagramPerformance,
+    FacebookPerformance,
+    TwitterPerformance,
+  };
+
+  // Load tiles when category changes
+  useEffect(() => {
+    const tileConfig = getTileConfig(activeCategory as Category);
+    setTiles(tileConfig);
+  }, [activeCategory]);
 
   // Fetch overview metrics
   useEffect(() => {
@@ -59,37 +89,62 @@ export default function Home() {
     router.push(`/?category=${category}`);
   };
 
-  const renderOverviews = () => {
-    switch (activeCategory) {
-      case 'seo':
-        return (
-          <>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <GoogleAnalyticsOverview />
-              <SearchConsoleOverview />
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <HubSpotOverview />
-              <SEMrushOverview />
-            </div>
-          </>
-        );
-      case 'paid-campaigns':
-        return (
-          <div className="grid grid-cols-2 gap-6">
-            <LinkedInAdsOverview />
-            <GoogleAdsOverview />
-          </div>
-        );
-      case 'social-media':
-        return (
-          <div className="grid grid-cols-2 gap-6">
-            <OktopostOverview />
-          </div>
-        );
-      default:
-        return null;
+  // Drag and drop handlers
+  const handleDragStart = (id: string) => {
+    setDraggedId(id);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handleDragOver = (id: string) => {
+    if (draggedId && draggedId !== id) {
+      setDragOverId(id);
     }
+  };
+
+  const handleDrop = (draggedId: string, targetId: string) => {
+    if (draggedId !== targetId) {
+      const newTiles = reorderTiles(activeCategory as Category, draggedId, targetId);
+      setTiles(newTiles);
+    }
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handlePinToggle = (id: string) => {
+    const newTiles = toggleTilePin(activeCategory as Category, id);
+    setTiles(newTiles);
+  };
+
+  const renderOverviews = () => {
+    return (
+      <div className="grid grid-cols-2 gap-6">
+        {tiles.map((tile) => {
+          const Component = componentMap[tile.component];
+          if (!Component) return null;
+
+          return (
+            <DraggableTile
+              key={tile.id}
+              id={tile.id}
+              isPinned={tile.isPinned}
+              onPinToggle={handlePinToggle}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              isDragging={draggedId === tile.id}
+              dragOverId={dragOverId}
+            >
+              <Component />
+            </DraggableTile>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
