@@ -2,6 +2,7 @@
 
 import { useDateRange, DateRange } from '@/contexts/DateRangeContext';
 import { MessageSquare } from 'lucide-react';
+import Link from 'next/link';
 
 interface HeaderProps {
   onOpenAIAssistant?: () => void;
@@ -19,9 +20,9 @@ export default function Header({ onOpenAIAssistant }: HeaderProps) {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="text-white font-bold text-3xl">
+          <Link href="/" className="text-white font-bold text-3xl hover:opacity-80 transition-opacity cursor-pointer">
             XMetrics
-          </div>
+          </Link>
         </div>
 
         {/* Filters and AI Assistant */}
