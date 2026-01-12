@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ComposedChart } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useDateRange } from '@/contexts/DateRangeContext';
+import ChartTypeSwitcher, { ChartType } from './ChartTypeSwitcher';
 
 export default function LinkedInAdsOverview() {
   const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartType, setChartType] = useState<ChartType>('line');
   const [summary, setSummary] = useState({
     totalSpend: 0,
     totalClicks: 0,
@@ -100,49 +102,107 @@ export default function LinkedInAdsOverview() {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis 
-            dataKey="day" 
-            tick={{ fontSize: 12 }} 
-            stroke="#999"
-            interval={4}
-          />
-          <YAxis 
-            tick={{ fontSize: 12 }} 
-            stroke="#999"
-            yAxisId="left"
-          />
-          <YAxis 
-            tick={{ fontSize: 12 }} 
-            stroke="#999"
-            yAxisId="right"
-            orientation="right"
-          />
-          <Tooltip 
-            contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="clicks" 
-            stroke="#9333ea" 
-            strokeWidth={2} 
-            dot={false} 
-            name="Clicks"
-            yAxisId="left"
-          />
-          <Line 
-            type="monotone" 
-            dataKey="conversions" 
-            stroke="#c084fc" 
-            strokeWidth={2} 
-            dot={false} 
-            name="Conversions"
-            yAxisId="right"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="relative">
+        <ChartTypeSwitcher
+          currentType={chartType}
+          availableTypes={['line', 'bar', 'area']}
+          onTypeChange={setChartType}
+        />
+
+        <ResponsiveContainer width="100%" height={200}>
+          {chartType === 'bar' ? (
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="day" 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+                interval={4}
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+              />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+              />
+              <Bar dataKey="clicks" fill="#9333ea" name="Clicks" />
+              <Bar dataKey="conversions" fill="#c084fc" name="Conversions" />
+            </BarChart>
+          ) : chartType === 'area' ? (
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="colorClicksLinkedIn" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1}/>
+                </linearGradient>
+                <linearGradient id="colorConversionsLinkedIn" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#c084fc" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#c084fc" stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="day" 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+                interval={4}
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+              />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+              />
+              <Area type="monotone" dataKey="clicks" stroke="#9333ea" fill="url(#colorClicksLinkedIn)" name="Clicks" />
+              <Area type="monotone" dataKey="conversions" stroke="#c084fc" fill="url(#colorConversionsLinkedIn)" name="Conversions" />
+            </AreaChart>
+          ) : (
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="day" 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+                interval={4}
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+                yAxisId="left"
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                stroke="#999"
+                yAxisId="right"
+                orientation="right"
+              />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="clicks" 
+                stroke="#9333ea" 
+                strokeWidth={2} 
+                dot={false} 
+                name="Clicks"
+                yAxisId="left"
+              />
+              <Line 
+                type="monotone" 
+                dataKey="conversions" 
+                stroke="#c084fc" 
+                strokeWidth={2} 
+                dot={false} 
+                name="Conversions"
+                yAxisId="right"
+              />
+            </LineChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

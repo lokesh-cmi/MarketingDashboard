@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
 import { useDateRange } from '@/contexts/DateRangeContext';
+import ChartTypeSwitcher, { ChartType } from './ChartTypeSwitcher';
 
 interface DealsMetrics {
   totalDeals: number;
@@ -27,6 +28,7 @@ export default function HubSpotOverview() {
   const [data, setData] = useState<HubSpotOverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chartType, setChartType] = useState<ChartType>('bar');
 
   useEffect(() => {
     async function fetchData() {
@@ -100,13 +102,13 @@ export default function HubSpotOverview() {
           Total Deals sourced by Marketing FY25
         </h3>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <div className="text-sm text-gray-500 mb-1">(COUNT) DEALS</div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-gray-50 rounded-lg px-3 py-2 border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-500 mb-1 whitespace-nowrap">(COUNT) DEALS</div>
             <div className="text-2xl font-semibold text-gray-900">{dealsMetrics.totalDeals}</div>
           </div>
-          <div>
-            <div className="text-sm text-gray-500 mb-1">(SUM) AMOUNT IN COMPANY CURRENCY</div>
+          <div className="bg-gray-50 rounded-lg px-3 py-2 border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-500 mb-1 whitespace-nowrap">(SUM) AMOUNT IN COMPANY CURRENCY</div>
             <div className="text-2xl font-semibold text-gray-900">{dealsMetrics.totalAmount}</div>
           </div>
         </div>
@@ -129,32 +131,105 @@ export default function HubSpotOverview() {
           </div>
         </div>
 
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart
-            data={contactLifecycleData}
-            layout="vertical"
-            margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis
-              type="number"
-              tick={{ fontSize: 11, fill: '#999' }}
-              axisLine={{ stroke: '#e5e7eb' }}
-            />
-            <YAxis
-              type="category"
-              dataKey="stage"
-              tick={{ fontSize: 11, fill: '#666' }}
-              width={110}
-              axisLine={false}
-            />
-            <Tooltip
-              contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
-            />
-            <Bar dataKey="digital" stackId="a" fill="#9333ea" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="events" stackId="a" fill="#d8b4fe" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="relative w-full overflow-x-auto">
+          <ChartTypeSwitcher
+            currentType={chartType}
+            availableTypes={['bar', 'line', 'area']}
+            onTypeChange={setChartType}
+          />
+
+          <ResponsiveContainer width="100%" height={200}>
+            {chartType === 'line' ? (
+              <LineChart
+                data={contactLifecycleData}
+                layout="vertical"
+                margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 11, fill: '#999' }}
+                  axisLine={{ stroke: '#e5e7eb' }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="stage"
+                  tick={{ fontSize: 11, fill: '#666' }}
+                  width={90}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                />
+                <Line type="monotone" dataKey="digital" stroke="#9333ea" strokeWidth={2} name="Marketing Sourced - Digital" />
+                <Line type="monotone" dataKey="events" stroke="#d8b4fe" strokeWidth={2} name="Marketing Sourced - Events" />
+              </LineChart>
+            ) : chartType === 'area' ? (
+              <AreaChart
+                data={contactLifecycleData}
+                layout="vertical"
+                margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient id="colorDigital" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1}/>
+                  </linearGradient>
+                  <linearGradient id="colorEvents" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="5%" stopColor="#d8b4fe" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#d8b4fe" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 11, fill: '#999' }}
+                  axisLine={{ stroke: '#e5e7eb' }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="stage"
+                  tick={{ fontSize: 11, fill: '#666' }}
+                  width={90}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                />
+                <Area dataKey="digital" stroke="#9333ea" fill="url(#colorDigital)" stackId="1" name="Marketing Sourced - Digital" />
+                <Area dataKey="events" stroke="#d8b4fe" fill="url(#colorEvents)" stackId="1" name="Marketing Sourced - Events" />
+              </AreaChart>
+            ) : (
+              <BarChart
+                data={contactLifecycleData}
+                layout="vertical"
+                margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 11, fill: '#999' }}
+                  axisLine={{ stroke: '#e5e7eb' }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="stage"
+                  tick={{ fontSize: 11, fill: '#666' }}
+                  width={90}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                />
+                <Bar dataKey="digital" stackId="a" fill="#9333ea" radius={[0, 0, 0, 0]} />
+                <Bar dataKey="events" stackId="a" fill="#d8b4fe" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            )}
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

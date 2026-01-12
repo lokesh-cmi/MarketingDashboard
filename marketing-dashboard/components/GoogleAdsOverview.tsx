@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useDateRange } from '@/contexts/DateRangeContext';
+import ChartTypeSwitcher, { ChartType } from './ChartTypeSwitcher';
 
 export default function GoogleAdsOverview() {
   const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartType, setChartType] = useState<ChartType>('line');
   const [summary, setSummary] = useState({
     totalClicks: 0,
     totalCost: 0,
@@ -91,15 +93,47 @@ export default function GoogleAdsOverview() {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
-          <YAxis tick={{ fontSize: 12 }} stroke="#999" />
-          <Tooltip />
-          <Line type="monotone" dataKey="clicks" stroke="#9333ea" strokeWidth={2} dot={{ r: 4 }} name="Clicks" />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="relative">
+        <ChartTypeSwitcher
+          currentType={chartType}
+          availableTypes={['line', 'bar', 'area']}
+          onTypeChange={setChartType}
+        />
+
+        <ResponsiveContainer width="100%" height={200}>
+          {chartType === 'bar' ? (
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 12 }} stroke="#999" />
+              <Tooltip />
+              <Bar dataKey="clicks" fill="#9333ea" name="Clicks" />
+            </BarChart>
+          ) : chartType === 'area' ? (
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="colorClicksGoogle" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 12 }} stroke="#999" />
+              <Tooltip />
+              <Area type="monotone" dataKey="clicks" stroke="#9333ea" fill="url(#colorClicksGoogle)" name="Clicks" />
+            </AreaChart>
+          ) : (
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 12 }} stroke="#999" />
+              <Tooltip />
+              <Line type="monotone" dataKey="clicks" stroke="#9333ea" strokeWidth={2} dot={{ r: 4 }} name="Clicks" />
+            </LineChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

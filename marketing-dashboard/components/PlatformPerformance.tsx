@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useDateRange } from '@/contexts/DateRangeContext';
+import ChartTypeSwitcher, { ChartType } from './ChartTypeSwitcher';
 
 interface PlatformPerformanceProps {
   platform: 'LinkedIn' | 'Instagram' | 'Facebook' | 'Twitter';
@@ -14,6 +15,7 @@ export default function PlatformPerformance({ platform, bgColor, icon }: Platfor
   const { dateRange, getDateRangeInDays } = useDateRange();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [chartType, setChartType] = useState<ChartType>('area');
 
   useEffect(() => {
     async function fetchData() {
@@ -149,21 +151,47 @@ export default function PlatformPerformance({ platform, bgColor, icon }: Platfor
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={220}>
-        <AreaChart data={data.chartData}>
-          <defs>
-            <linearGradient id={getGradientId()} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colors.start} stopOpacity={0.8}/>
-              <stop offset="95%" stopColor={colors.end} stopOpacity={0.1}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#999" />
-          <YAxis tick={{ fontSize: 11 }} stroke="#999" />
-          <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }} />
-          <Area type="monotone" dataKey="engagement" stroke={colors.start} fill={`url(#${getGradientId()})`} />
-        </AreaChart>
-      </ResponsiveContainer>
+      <div className="relative">
+        <ChartTypeSwitcher
+          currentType={chartType}
+          availableTypes={['area', 'line', 'bar']}
+          onTypeChange={setChartType}
+        />
+
+        <ResponsiveContainer width="100%" height={220}>
+          {chartType === 'line' ? (
+            <LineChart data={data.chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#999" />
+              <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }} />
+              <Line type="monotone" dataKey="engagement" stroke={colors.start} strokeWidth={2} dot={{ r: 3 }} />
+            </LineChart>
+          ) : chartType === 'bar' ? (
+            <BarChart data={data.chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#999" />
+              <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }} />
+              <Bar dataKey="engagement" fill={colors.start} />
+            </BarChart>
+          ) : (
+            <AreaChart data={data.chartData}>
+              <defs>
+                <linearGradient id={getGradientId()} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={colors.start} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={colors.end} stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#999" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#999" />
+              <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }} />
+              <Area type="monotone" dataKey="engagement" stroke={colors.start} fill={`url(#${getGradientId()})`} />
+            </AreaChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
