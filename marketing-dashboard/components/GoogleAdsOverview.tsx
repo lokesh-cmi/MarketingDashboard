@@ -65,7 +65,7 @@ export default function GoogleAdsOverview() {
         <h2 className="text-xl font-semibold text-gray-900">Google Ads Overview</h2>
         <Link 
           href="/google-ads?category=paid-campaigns"
-          className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
         >
           View More
           <ChevronRight className="w-4 h-4" />

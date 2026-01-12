@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
-import { linkedInAdsOverviewData } from '../lib/mock-data/linkedinAdsData';
-import { googleAdsOverviewData } from '../lib/mock-data/googleAdsData';
-import { topKeywords, siteHealthData } from '../lib/mock-data/semrushData';
-import { contactLifecycleData } from '../lib/mock-data/hubspotData';
+import { linkedInAdsOverviewData } from '../lib/mock-data/linkedinAdsData.js';
+import { googleAdsOverviewData } from '../lib/mock-data/googleAdsData.js';
+import { topKeywords, siteHealthData } from '../lib/mock-data/semrushData.js';
+import { contactLifecycleData } from '../lib/mock-data/hubspotData.js';
 import {
   linkedInMetrics,
   linkedInTimeSeriesData,
@@ -14,7 +14,7 @@ import {
   facebookTimeSeriesData,
   twitterMetrics,
   twitterTimeSeriesData
-} from '../lib/mock-data/oktopostData';
+} from '../lib/mock-data/oktopostData.js';
 
 const adapter = new PrismaLibSql({
   url: `file:${process.cwd()}/dev.db`,
@@ -137,12 +137,18 @@ async function main() {
   // Seed Oktopost Social Media Data
   console.log('Seeding Oktopost Social Media...');
   
+  const socialMediaToday = new Date();
+  
   // LinkedIn
-  for (const item of linkedInTimeSeriesData) {
+  for (let i = 0; i < linkedInTimeSeriesData.length; i++) {
+    const item = linkedInTimeSeriesData[i];
+    const date = new Date(socialMediaToday);
+    date.setDate(date.getDate() - (linkedInTimeSeriesData.length - i));
+    
     await prisma.oktopostSocialMedia.create({
       data: {
         platform: 'LinkedIn',
-        date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
+        date: date,
         followers: Number(item.followers) || 0,
         impressions: Number(item.impressions) || 0,
         engagement: Number(item.engagement) || 0,
@@ -153,14 +159,20 @@ async function main() {
   }
 
   // Instagram
-  for (const item of instagramTimeSeriesData) {
+  for (let i = 0; i < instagramTimeSeriesData.length; i++) {
+    const item = instagramTimeSeriesData[i];
+    const date = new Date(socialMediaToday);
+    date.setDate(date.getDate() - (instagramTimeSeriesData.length - i));
+    
     await prisma.oktopostSocialMedia.create({
       data: {
         platform: 'Instagram',
-        date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
+        date: date,
         followers: Number(item.followers) || 0,
+        impressions: Number(item.reach) || 0, // Use reach as impressions for Instagram
         reach: Number(item.reach) || 0,
         engagement: Number(item.likes) + Number(item.comments),
+        clicks: Math.floor((Number(item.reach) || 0) * 0.05), // Estimate clicks as 5% of reach
         likes: Number(item.likes) || 0,
         comments: Number(item.comments) || 0,
         saves: Number(item.saves) || 0,
@@ -169,14 +181,20 @@ async function main() {
   }
 
   // Facebook
-  for (const item of facebookTimeSeriesData) {
+  for (let i = 0; i < facebookTimeSeriesData.length; i++) {
+    const item = facebookTimeSeriesData[i];
+    const date = new Date(socialMediaToday);
+    date.setDate(date.getDate() - (facebookTimeSeriesData.length - i));
+    
     await prisma.oktopostSocialMedia.create({
       data: {
         platform: 'Facebook',
-        date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
+        date: date,
         followers: Number(item.followers) || 0,
+        impressions: Number(item.reach) || 0, // Use reach as impressions for Facebook
         reach: Number(item.reach) || 0,
         engagement: Number(item.engagement) || 0,
+        clicks: Math.floor((Number(item.reach) || 0) * 0.04), // Estimate clicks as 4% of reach
         reactions: Number(item.reactions) || 0,
         shares: Number(item.shares) || 0,
       },
@@ -184,14 +202,19 @@ async function main() {
   }
 
   // Twitter
-  for (const item of twitterTimeSeriesData) {
+  for (let i = 0; i < twitterTimeSeriesData.length; i++) {
+    const item = twitterTimeSeriesData[i];
+    const date = new Date(socialMediaToday);
+    date.setDate(date.getDate() - (twitterTimeSeriesData.length - i));
+    
     await prisma.oktopostSocialMedia.create({
       data: {
         platform: 'Twitter',
-        date: new Date(`2024-06-${item.date.split(' ')[0].padStart(2, '0')}`),
+        date: date,
         followers: Number(item.followers) || 0,
         impressions: Number(item.impressions) || 0,
         engagement: Number(item.engagement) || 0,
+        clicks: Math.floor((Number(item.impressions) || 0) * 0.03), // Estimate clicks as 3% of impressions
         retweets: Number(item.retweets) || 0,
         likes: Number(item.likes) || 0,
       },
