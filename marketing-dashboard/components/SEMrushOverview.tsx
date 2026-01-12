@@ -70,48 +70,40 @@ export default function SEMrushOverview() {
         <h3 className="text-sm font-medium text-gray-700 mb-4">Keywords</h3>
         <div className="grid grid-cols-4 gap-3">
           {/* Top 3 Keywords */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-baseline gap-2">
-              <div className="text-xs text-gray-600">Top 3</div>
-              <div className="text-xl font-bold text-gray-900">{data.keywords.top3.count}</div>
-            </div>
-            <div className="flex gap-2 mt-2">
+          <div className="px-3 py-2 bg-gray-50 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-600 mb-1 whitespace-nowrap">Top 3</div>
+            <div className="text-xl font-bold text-gray-900 mb-1">{data.keywords.top3.count}</div>
+            <div className="flex flex-col gap-0.5">
               <div className="text-xs text-green-600">new {data.keywords.top3.new}</div>
               <div className="text-xs text-red-600">lost {data.keywords.top3.lost}</div>
             </div>
           </div>
 
           {/* Top 10 Keywords */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-baseline gap-2">
-              <div className="text-xs text-gray-600">Top 10</div>
-              <div className="text-xl font-bold text-gray-900">{data.keywords.top10.count}</div>
-            </div>
-            <div className="flex gap-2 mt-2">
+          <div className="px-3 py-2 bg-gray-50 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-600 mb-1 whitespace-nowrap">Top 10</div>
+            <div className="text-xl font-bold text-gray-900 mb-1">{data.keywords.top10.count}</div>
+            <div className="flex flex-col gap-0.5">
               <div className="text-xs text-green-600">new {data.keywords.top10.new}</div>
               <div className="text-xs text-red-600">lost {data.keywords.top10.lost}</div>
             </div>
           </div>
 
           {/* Top 20 Keywords */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-baseline gap-2">
-              <div className="text-xs text-gray-600">Top 20</div>
-              <div className="text-xl font-bold text-gray-900">{data.keywords.top20.count}</div>
-            </div>
-            <div className="flex gap-2 mt-2">
+          <div className="px-3 py-2 bg-gray-50 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-600 mb-1 whitespace-nowrap">Top 20</div>
+            <div className="text-xl font-bold text-gray-900 mb-1">{data.keywords.top20.count}</div>
+            <div className="flex flex-col gap-0.5">
               <div className="text-xs text-green-600">new {data.keywords.top20.new}</div>
               <div className="text-xs text-red-600">lost {data.keywords.top20.lost}</div>
             </div>
           </div>
 
           {/* Top 100 Keywords */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-baseline gap-2">
-              <div className="text-xs text-gray-600">Top 100</div>
-              <div className="text-xl font-bold text-gray-900">{data.keywords.top100.count}</div>
-            </div>
-            <div className="flex gap-2 mt-2">
+          <div className="px-3 py-2 bg-gray-50 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+            <div className="text-xs text-gray-600 mb-1 whitespace-nowrap">Top 100</div>
+            <div className="text-xl font-bold text-gray-900 mb-1">{data.keywords.top100.count}</div>
+            <div className="flex flex-col gap-0.5">
               <div className="text-xs text-green-600">new {data.keywords.top100.new}</div>
               <div className="text-xs text-red-600">lost {data.keywords.top100.lost}</div>
             </div>
