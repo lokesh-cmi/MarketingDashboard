@@ -51,18 +51,18 @@ export default function SearchConsolePage() {
   // Get display text for date range
   const getDateRangeDisplayText = () => {
     switch (dateRange) {
-      case 'lastWeek':
+      case 'Last Week':
         return 'last week';
-      case 'lastMonth':
+      case 'Last Month':
         return 'last month';
-      case 'lastQuarter':
+      case 'Last Quarter':
         return 'last quarter';
-      case 'last6Months':
+      case 'Last 6 Months':
         return 'last 6 months';
-      case 'lastYear':
+      case 'Last Year':
         return 'last year';
       default:
-        return 'last 6 months';
+        return 'selected period';
     }
   };
 
