@@ -817,8 +817,341 @@ Ok. Push the code
 
 ---
 
+## Prompt 90: Update Prompt Documentation
+**Date**: January 12, 2026
+
+```
+Please update prompt.md file with all the prompts i asked for this project. Align them in order with detailed flows
+```
+
+---
+
+## Prompt 91: Simplify Prompt Documentation
+**Date**: January 12, 2026
+
+```
+No I just want all prompts. No need to add detailed description
+```
+
+---
+
+## Prompt 92: Change Website Theme to Purple
+**Date**: January 12, 2026
+
+```
+Similar to this image, Please change the theme of the website to purple.
+```
+
+---
+
+## Prompt 93: Fix Social Media Data Display
+**Date**: January 12, 2026
+
+```
+I see all the data is not being shown here in all the components - LinkedIn, instagram, facebook and twitter in social media page, can you fix it?
+```
+
+---
+
+## Prompt 94: Update Database
+**Date**: January 12, 2026
+
+```
+yes and please update the db as well
+```
+
+---
+
+## Prompt 95: Commit Date Range Filter
+**Date**: January 12, 2026
+
+```
+commit changes "date range filter"
+```
+
+---
+
+## Prompt 96: AI-Assisted Search Bot Feature
+**Date**: January 12, 2026
+
+```
+I now have a new requirement. Provide me the solution in the best possible way Also remember, do not checkin or push anything into the repo without my approval since we have a stabilised environment Now I want to add an AI assisted search bot that communicates with the user. It takes a prompt from the user, searches the data across avislable data or cache and provide an appropriate response For example: if the user asks "What are my top keywords in semrush", we should be showing the appropriate data thats asked acoording to the user prompt Also to add to the information, show this feature when user clicks on "Talk to us" button, placed right to the date filter. In the new route, please add prompt input box and then proceed ahead with the search according to the user prompt
+```
+
+---
+
+## Prompt 97: AI Assistant Implementation Details
+**Date**: January 12, 2026
+
+```
+1. Please use open AI for API responses 2. I dont need the history to be saved as this is jus public page. I want to show charts or graphs when needed according to the prompt. No export of chat needed 3. Search across all data sources according to the input prompt 4. I dont mind whether you open a modal or a new route for this, choose your comfort. The modal should match the current theme
+```
+
+---
+
+## Prompt 98: Add OpenAI API Key
+**Date**: January 12, 2026
+
+```
+I see the 500 error for missing openai api key please add OPENAI_API_KEY as 'sk-proj-...'
+```
+
+---
+
+## Prompt 99: Update OpenAI Model
+**Date**: January 12, 2026
+
+```
+I see a 404 error for gpt-4 model thats being used Please update it to gpt-4o-mini, the default one so we overcome the issue
+```
+
+---
+
+## Prompt 100: Update Search Modal Theme
+**Date**: January 12, 2026
+
+```
+Please update the search modal ui to match the theme right now it is blue, which is not macthing the whole site theme
+```
+
+---
+
+## Prompt 101: Push Search Implementation
+**Date**: January 12, 2026
+
+```
+push the changes "search implemented"
+```
+
+---
+
+## Prompt 102: UI Enhancement Request
+**Date**: January 12, 2026
+
+```
+For all overviews, the pin and drag symbol are overriding "view more" button, can u adjust them to be looking good without overriding. Also For graph and headers like seo, paid campaign and social media hovers should be in purple theme to match with xebia in overview page. And the logo of xmetrics is not recomended. I want the logo to be as per 3rd image
+```
+
+---
+
+## Prompt 103: Overview Screen Graph Theme
+**Date**: January 12, 2026
+
+```
+Thank u. So In Overview screen, I want the graph lines and graph representation in Purple theme so entire website will look good. Also the "Talk to Us" button at top is mixed with the theme. Please adjust it with any theme which looks professional and user can easily look at it.
+```
+
+---
+
+## Prompt 104: Update All Overview Graph Colors
+**Date**: January 12, 2026
+
+```
+Perfect. But i can see the colour is same as before for Hubspot and Semrush Overviews and Google and Linkedin ads Overviews. Can you please change graph colours to purple? For similar colors use different Shades of purple for the same
+```
+
+---
+
+## Prompt 105: HubSpot Color Adjustment
+**Date**: January 12, 2026
+
+```
+In hubspot Overview, The other colour is still blue, Instead use lighter shade of purple onlu
+```
+
+---
+
+## Prompt 106: Push Theme Changes
+**Date**: January 12, 2026
+
+```
+Push the changes
+```
+
+---
+
+## Prompt 107: Fix Pinned Tile Drag Issue
+**Date**: January 12, 2026
+
+```
+Almost working fine Jus the pinned tile, we are able to drag something into the position thats already pinned This should not happen Please fix this small issue
+```
+
+---
+
+## Prompt 108: Commit Drag Drop Feature
+**Date**: January 12, 2026
+
+```
+commit all changes "drag drop and pin done"
+```
+
+---
+
+## Prompt 109: Comprehensive UI/UX Improvements
+**Date**: January 12, 2026
+
+```
+Please make sure the existing theme changes are not affected by these UI enhancements [extensive UI improvements including responsive design, table styling, chart enhancements, tile alignment, etc.]
+```
+
+---
+
+## Prompt 110: Change Chart Switcher to Dropdown
+**Date**: January 12, 2026
+
+```
+The chart switcher modal is not looking great Can we make that a simple dropdown on the icon click
+```
+
+---
+
+## Prompt 111: Commit Chart Switcher
+**Date**: January 12, 2026
+
+```
+Perfect, thanks Please commit changes "chart switcher"
+```
+
+---
+
+## Prompt 112: Fix Google Analytics Page Layout
+**Date**: January 12, 2026
+
+```
+In Google Analytics page: Traffic & Acquisition, Engagement looks weird. Instead of them inside the individual boxes, please make them stay in the parent box itself. And also please divide Traffic & Acquisition and Engagement tiles with a line divider.
+```
+
+---
+
+## Prompt 113: Improve Traffic Tables
+**Date**: January 12, 2026
+
+```
+Perfect, thanks. Now let's make it even better. Tables in the Traffic & Acquisition are very weird. For instance, Most popular Pages has Grand Total needs to be scrolled to the bottom. Instead, stick it and scroll the content on the table. Also divide Traffic per country, Traffic per device, Traffic source properly justified please.
+```
+
+---
+
+## Prompt 114: Make Traffic Pie Chart Interactive
+**Date**: January 12, 2026
+
+```
+Great, now Traffic per device pie chart is not interactive. Please make it look nice.
+```
+
+---
+
+## Prompt 115: Add Chart Selector to Ads Detail Pages
+**Date**: January 12, 2026
+
+```
+I see the linked in ads detailed overview and google ads detailed overview charts have the chart selector missing Can you please add that in the mentioned places
+```
+
+---
+
+## Prompt 116: Commit Chart Switcher Everywhere
+**Date**: January 12, 2026
+
+```
+commit changes "chart switcher added everywhere"
+```
+
+---
+
+## Prompt 117: Dynamic Search Console Date Range Text
+**Date**: January 12, 2026
+
+```
+In the google search console, the sub heading "Detailed search performance for the last 6 months" is static. It should be aligned with the date selected Please update the chanhe
+```
+
+---
+
+## Prompt 118: Fix Date Range Text Update
+**Date**: January 12, 2026
+
+```
+I dont see it getting updated. I still see it 6months only after changing the date
+```
+
+---
+
+## Prompt 119: Commit Text Update
+**Date**: January 12, 2026
+
+```
+Perfect, thanks Commit changes "text update"
+```
+
+---
+
+## Prompt 120: Fix Social Media Chart Theme
+**Date**: January 12, 2026
+
+```
+The social media overview charts are not matching the other charts theme
+```
+
+---
+
+## Prompt 121: Update All Detail Page Chart Themes
+**Date**: January 12, 2026
+
+```
+Also please take care of the chart theme in LinkedIn Ads Overview, Google Ads Campaign Performance, HubSpot Dashboard detailed(texts along with charts), SEO Dashboard: xebia
+```
+
+---
+
+## Prompt 122: Fix Remaining Chart Themes
+**Date**: January 12, 2026
+
+```
+I still see the On Page SEO Checker, Ad to Click & Post to Click charts are not according to the theme
+```
+
+---
+
+## Prompt 123: Commit Chart Theme Adjustments
+**Date**: January 12, 2026
+
+```
+perfect now, thanks commit changes "charts theme adjusted"
+```
+
+---
+
+## Prompt 124: Make Logo Clickable
+**Date**: January 12, 2026
+
+```
+Can you do this small change When user clicks on the Xmetrics on the headers, navigate him to the landing screen or home page
+```
+
+---
+
+## Prompt 125: Add Padding to Date Picker Chevron
+**Date**: January 12, 2026
+
+```
+Can you please add little padding to the chevron icon in the date picker
+```
+
+---
+
+## Prompt 126: Update Prompt Log
+**Date**: January 12, 2026
+
+```
+update prompt log file
+```
+
+---
 
 
-**Total Prompts**: 89
+
+**Total Prompts**: 126
 **Project Duration**: January 11-12, 2026
 **Repository**: github.com:lokesh-cmi/MarketingDashboard.git
