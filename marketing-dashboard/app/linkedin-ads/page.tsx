@@ -279,21 +279,21 @@ export default function LinkedInAdsPage() {
                   <Line 
                     type="monotone" 
                     dataKey="sponsoredVideo" 
-                    stroke="#1E3A8A" 
+                    stroke="#9333ea" 
                     strokeWidth={2}
                     name="Sponsored Video"
                   />
                   <Line 
                     type="monotone" 
                     dataKey="sponsoredMessage" 
-                    stroke="#60A5FA" 
+                    stroke="#a855f7" 
                     strokeWidth={2}
                     name="Sponsored Message"
                   />
                   <Line 
                     type="monotone" 
                     dataKey="sponsoredUpdate" 
-                    stroke="#BFDBFE" 
+                    stroke="#c084fc" 
                     strokeWidth={2}
                     name="Sponsored Status Update"
                   />
@@ -322,19 +322,19 @@ export default function LinkedInAdsPage() {
                   <Bar 
                     dataKey="sponsoredVideo" 
                     stackId="1" 
-                    fill="#1E3A8A" 
+                    fill="#9333ea" 
                     name="Sponsored Video"
                   />
                   <Bar 
                     dataKey="sponsoredMessage" 
                     stackId="1" 
-                    fill="#60A5FA" 
+                    fill="#a855f7" 
                     name="Sponsored Message"
                   />
                   <Bar 
                     dataKey="sponsoredUpdate" 
                     stackId="1" 
-                    fill="#BFDBFE" 
+                    fill="#c084fc" 
                     name="Sponsored Status Update"
                   />
                 </BarChart>
@@ -342,16 +342,16 @@ export default function LinkedInAdsPage() {
                 <AreaChart data={adToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorVideo" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#1E3A8A" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#9333ea" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorMessage" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#a855f7" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#a855f7" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorUpdate" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#BFDBFE" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#BFDBFE" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#c084fc" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#c084fc" stopOpacity={0.3}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
@@ -377,7 +377,7 @@ export default function LinkedInAdsPage() {
                     type="monotone" 
                     dataKey="sponsoredVideo" 
                     stackId="1" 
-                    stroke="#1E3A8A" 
+                    stroke="#9333ea" 
                     fill="url(#colorVideo)" 
                     name="Sponsored Video"
                   />
@@ -385,7 +385,7 @@ export default function LinkedInAdsPage() {
                     type="monotone" 
                     dataKey="sponsoredMessage" 
                     stackId="1" 
-                    stroke="#60A5FA" 
+                    stroke="#a855f7" 
                     fill="url(#colorMessage)" 
                     name="Sponsored Message"
                   />
@@ -393,7 +393,7 @@ export default function LinkedInAdsPage() {
                     type="monotone" 
                     dataKey="sponsoredUpdate" 
                     stackId="1" 
-                    stroke="#BFDBFE" 
+                    stroke="#c084fc" 
                     fill="url(#colorUpdate)" 
                     name="Sponsored Status Update"
                   />
@@ -455,12 +455,12 @@ export default function LinkedInAdsPage() {
                     wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
                     iconType="circle"
                   />
-                  <Line type="monotone" dataKey="gif" stroke="#3B82F6" strokeWidth={2} name="GIF" />
-                  <Line type="monotone" dataKey="gallery" stroke="#06B6D4" strokeWidth={2} name="Gallery" />
-                  <Line type="monotone" dataKey="image" stroke="#84CC16" strokeWidth={2} name="Image" />
-                  <Line type="monotone" dataKey="link" stroke="#EAB308" strokeWidth={2} name="Link" />
-                  <Line type="monotone" dataKey="text" stroke="#F97316" strokeWidth={2} name="Text" />
-                  <Line type="monotone" dataKey="video" stroke="#DC2626" strokeWidth={2} name="Video" />
+                  <Line type="monotone" dataKey="gif" stroke="#9333ea" strokeWidth={2} name="GIF" />
+                  <Line type="monotone" dataKey="gallery" stroke="#a855f7" strokeWidth={2} name="Gallery" />
+                  <Line type="monotone" dataKey="image" stroke="#c084fc" strokeWidth={2} name="Image" />
+                  <Line type="monotone" dataKey="link" stroke="#d8b4fe" strokeWidth={2} name="Link" />
+                  <Line type="monotone" dataKey="text" stroke="#7c3aed" strokeWidth={2} name="Text" />
+                  <Line type="monotone" dataKey="video" stroke="#8b5cf6" strokeWidth={2} name="Video" />
                 </LineChart>
               ) : postToClickChartType === 'bar' ? (
                 <BarChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -483,39 +483,39 @@ export default function LinkedInAdsPage() {
                     wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
                     iconType="circle"
                   />
-                  <Bar dataKey="gif" stackId="1" fill="#3B82F6" name="GIF" />
-                  <Bar dataKey="gallery" stackId="1" fill="#06B6D4" name="Gallery" />
-                  <Bar dataKey="image" stackId="1" fill="#84CC16" name="Image" />
-                  <Bar dataKey="link" stackId="1" fill="#EAB308" name="Link" />
-                  <Bar dataKey="text" stackId="1" fill="#F97316" name="Text" />
-                  <Bar dataKey="video" stackId="1" fill="#DC2626" name="Video" />
+                  <Bar dataKey="gif" stackId="1" fill="#9333ea" name="GIF" />
+                  <Bar dataKey="gallery" stackId="1" fill="#a855f7" name="Gallery" />
+                  <Bar dataKey="image" stackId="1" fill="#c084fc" name="Image" />
+                  <Bar dataKey="link" stackId="1" fill="#d8b4fe" name="Link" />
+                  <Bar dataKey="text" stackId="1" fill="#7c3aed" name="Text" />
+                  <Bar dataKey="video" stackId="1" fill="#8b5cf6" name="Video" />
                 </BarChart>
               ) : (
                 <AreaChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorGif" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#9333ea" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorGallery" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#a855f7" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#a855f7" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorImage" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#84CC16" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#84CC16" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#c084fc" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#c084fc" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorLink" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#EAB308" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#EAB308" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#d8b4fe" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#d8b4fe" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorText" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#F97316" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#F97316" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#7c3aed" stopOpacity={0.3}/>
                     </linearGradient>
                     <linearGradient id="colorVideoPost" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#DC2626" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#DC2626" stopOpacity={0.3}/>
+                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.3}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
@@ -537,12 +537,12 @@ export default function LinkedInAdsPage() {
                     wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
                     iconType="circle"
                   />
-                  <Area type="monotone" dataKey="gif" stackId="1" stroke="#3B82F6" fill="url(#colorGif)" name="GIF" />
-                  <Area type="monotone" dataKey="gallery" stackId="1" stroke="#06B6D4" fill="url(#colorGallery)" name="Gallery" />
-                  <Area type="monotone" dataKey="image" stackId="1" stroke="#84CC16" fill="url(#colorImage)" name="Image" />
-                  <Area type="monotone" dataKey="link" stackId="1" stroke="#EAB308" fill="url(#colorLink)" name="Link" />
-                  <Area type="monotone" dataKey="text" stackId="1" stroke="#F97316" fill="url(#colorText)" name="Text" />
-                  <Area type="monotone" dataKey="video" stackId="1" stroke="#DC2626" fill="url(#colorVideoPost)" name="Video" />
+                  <Area type="monotone" dataKey="gif" stackId="1" stroke="#9333ea" fill="url(#colorGif)" name="GIF" />
+                  <Area type="monotone" dataKey="gallery" stackId="1" stroke="#a855f7" fill="url(#colorGallery)" name="Gallery" />
+                  <Area type="monotone" dataKey="image" stackId="1" stroke="#c084fc" fill="url(#colorImage)" name="Image" />
+                  <Area type="monotone" dataKey="link" stackId="1" stroke="#d8b4fe" fill="url(#colorLink)" name="Link" />
+                  <Area type="monotone" dataKey="text" stackId="1" stroke="#7c3aed" fill="url(#colorText)" name="Text" />
+                  <Area type="monotone" dataKey="video" stackId="1" stroke="#8b5cf6" fill="url(#colorVideoPost)" name="Video" />
                 </AreaChart>
               )}
             </ResponsiveContainer>
