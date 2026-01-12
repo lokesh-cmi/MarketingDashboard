@@ -56,11 +56,11 @@ export default function SEMrushOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">SEMrush Overview</h2>
-        <Link 
-          href="/semrush?category=seo"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          View More
+          <Link 
+            href="/semrush?category=seo"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -142,7 +142,7 @@ export default function SEMrushOverview() {
                   cx="72"
                   cy="72"
                   r="57"
-                  stroke="#84CC16"
+                  stroke="#9333ea"
                   strokeWidth="13"
                   fill="none"
                   strokeDasharray={`${(data.siteHealth.score / 100) * 358.14} 358.14`}

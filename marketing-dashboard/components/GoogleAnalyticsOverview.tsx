@@ -87,11 +87,11 @@ export default function GoogleAnalyticsOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Google Analytics Overview</h2>
-        <Link 
-          href="/analytics?category=seo"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-        >
-          View More
+          <Link 
+            href="/analytics?category=seo"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -135,7 +135,7 @@ export default function GoogleAnalyticsOverview() {
           <Line 
             type="monotone" 
             dataKey="sessions" 
-            stroke="#3b82f6" 
+            stroke="#9333ea" 
             strokeWidth={2} 
             dot={{ r: 4 }} 
             name="Sessions"
@@ -143,7 +143,7 @@ export default function GoogleAnalyticsOverview() {
           <Line 
             type="monotone" 
             dataKey="users" 
-            stroke="#10b981" 
+            stroke="#a855f7" 
             strokeWidth={2} 
             dot={{ r: 4 }} 
             name="Users"
@@ -151,7 +151,7 @@ export default function GoogleAnalyticsOverview() {
           <Line 
             type="monotone" 
             dataKey="pageViews" 
-            stroke="#f59e0b" 
+            stroke="#c084fc" 
             strokeWidth={2} 
             dot={{ r: 4 }} 
             name="Page Views"

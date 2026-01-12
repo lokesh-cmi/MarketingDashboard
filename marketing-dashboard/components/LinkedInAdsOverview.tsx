@@ -72,11 +72,11 @@ export default function LinkedInAdsOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">LinkedIn Ads Overview</h2>
-        <Link 
-          href="/linkedin-ads?category=paid-campaigns"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-        >
-          View More
+          <Link 
+            href="/linkedin-ads?category=paid-campaigns"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -126,7 +126,7 @@ export default function LinkedInAdsOverview() {
           <Line 
             type="monotone" 
             dataKey="clicks" 
-            stroke="#0077B5" 
+            stroke="#9333ea" 
             strokeWidth={2} 
             dot={false} 
             name="Clicks"
@@ -135,7 +135,7 @@ export default function LinkedInAdsOverview() {
           <Line 
             type="monotone" 
             dataKey="conversions" 
-            stroke="#00A0DC" 
+            stroke="#c084fc" 
             strokeWidth={2} 
             dot={false} 
             name="Conversions"

@@ -19,9 +19,8 @@ export default function Header({ onOpenAIAssistant }: HeaderProps) {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="text-white font-bold text-3xl flex items-center">
-            <span className="text-4xl mr-1">𝕏</span>
-            <span>Metrics</span>
+          <div className="text-white font-bold text-3xl">
+            XMetrics
           </div>
         </div>
 
@@ -42,7 +41,7 @@ export default function Header({ onOpenAIAssistant }: HeaderProps) {
           {/* AI Assistant Button */}
           <button
             onClick={onOpenAIAssistant}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all shadow-lg hover:shadow-xl"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white text-purple-600 hover:bg-purple-50 rounded-lg text-sm font-semibold transition-all shadow-md hover:shadow-lg border-2 border-purple-200 hover:border-purple-300"
           >
             <MessageSquare size={18} />
             Talk to us

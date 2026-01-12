@@ -97,11 +97,11 @@ export default function SearchConsoleOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Search Console Overview</h2>
-        <Link 
-          href="/search-console?category=seo"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-        >
-          View More
+          <Link 
+            href="/search-console?category=seo"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -163,13 +163,13 @@ export default function SearchConsoleOverview() {
             contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}
           />
           <Legend wrapperStyle={{ fontSize: 12 }} />
-          <Bar yAxisId="left" dataKey="impressions" fill="#6b7280" name="Impressions" />
-          <Bar yAxisId="left" dataKey="clicks" fill="#3b82f6" name="Clicks" />
+          <Bar yAxisId="left" dataKey="impressions" fill="#9333ea" name="Impressions" />
+          <Bar yAxisId="left" dataKey="clicks" fill="#a855f7" name="Clicks" />
           <Line 
             yAxisId="right" 
             type="monotone" 
             dataKey="position" 
-            stroke="#f59e0b" 
+            stroke="#c084fc" 
             strokeWidth={2}
             dot={{ r: 3 }}
             name="Position"

@@ -63,11 +63,11 @@ export default function GoogleAdsOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Google Ads Overview</h2>
-        <Link 
-          href="/google-ads?category=paid-campaigns"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-        >
-          View More
+          <Link 
+            href="/google-ads?category=paid-campaigns"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -97,7 +97,7 @@ export default function GoogleAdsOverview() {
           <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#999" />
           <YAxis tick={{ fontSize: 12 }} stroke="#999" />
           <Tooltip />
-          <Line type="monotone" dataKey="clicks" stroke="#4285F4" strokeWidth={2} dot={{ r: 4 }} name="Clicks" />
+          <Line type="monotone" dataKey="clicks" stroke="#9333ea" strokeWidth={2} dot={{ r: 4 }} name="Clicks" />
         </LineChart>
       </ResponsiveContainer>
     </div>

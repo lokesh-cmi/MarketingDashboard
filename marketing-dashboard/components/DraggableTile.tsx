@@ -81,7 +81,7 @@ export default function DraggableTile({
     >
       {/* Pinned Badge */}
       {isPinned && (
-        <div className="absolute top-4 left-4 z-10 bg-blue-600 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1 shadow-lg">
+        <div className="absolute top-2 left-2 z-10 bg-purple-600 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1 shadow-lg">
           <Pin size={12} fill="white" />
           Pinned
         </div>
@@ -89,28 +89,28 @@ export default function DraggableTile({
 
       {/* Controls (Grip and Pin Button) */}
       {(isHovered || isPinned) && (
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
           {/* Grip Handle (only show if not pinned) */}
           {!isPinned && (
-            <div className="bg-white bg-opacity-90 p-2 rounded-lg shadow-lg cursor-grab active:cursor-grabbing">
-              <GripVertical size={16} className="text-gray-600" />
+            <div className="bg-white bg-opacity-90 p-1.5 rounded-lg shadow-lg cursor-grab active:cursor-grabbing">
+              <GripVertical size={14} className="text-gray-600" />
             </div>
           )}
 
           {/* Pin Button */}
           <button
             onClick={() => onPinToggle(id)}
-            className={`p-2 rounded-lg shadow-lg transition-all ${
+            className={`p-1.5 rounded-lg shadow-lg transition-all ${
               isPinned
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-white bg-opacity-90 text-gray-600 hover:text-blue-600 hover:bg-white'
+                ? 'bg-purple-600 text-white hover:bg-purple-700'
+                : 'bg-white bg-opacity-90 text-gray-600 hover:text-purple-600 hover:bg-white'
             }`}
             title={isPinned ? 'Unpin tile' : 'Pin tile'}
           >
             <Pin
-              size={16}
+              size={14}
               fill={isPinned ? 'white' : 'none'}
-              className={isPinned ? '' : 'hover:fill-blue-600'}
+              className={isPinned ? '' : 'hover:fill-purple-600'}
             />
           </button>
         </div>

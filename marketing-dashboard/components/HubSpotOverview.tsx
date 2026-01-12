@@ -85,11 +85,11 @@ export default function HubSpotOverview() {
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">HubSpot Overview</h2>
-        <Link
-          href="/hubspot?category=seo"
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          View More
+          <Link
+            href="/hubspot?category=seo"
+            className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 transition-colors"
+          >
+            View More
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
@@ -124,7 +124,7 @@ export default function HubSpotOverview() {
             <span className="text-gray-600">Marketing Sourced - Digital</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-cyan-400 rounded"></div>
+            <div className="w-3 h-3 bg-purple-300 rounded"></div>
             <span className="text-gray-600">Marketing Sourced - Events</span>
           </div>
         </div>
@@ -151,8 +151,8 @@ export default function HubSpotOverview() {
             <Tooltip
               contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
             />
-            <Bar dataKey="digital" stackId="a" fill="#7C3AED" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="events" stackId="a" fill="#22D3EE" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="digital" stackId="a" fill="#9333ea" radius={[0, 0, 0, 0]} />
+            <Bar dataKey="events" stackId="a" fill="#d8b4fe" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
