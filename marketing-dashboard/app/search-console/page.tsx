@@ -48,6 +48,24 @@ export default function SearchConsolePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Get display text for date range
+  const getDateRangeDisplayText = () => {
+    switch (dateRange) {
+      case 'lastWeek':
+        return 'last week';
+      case 'lastMonth':
+        return 'last month';
+      case 'lastQuarter':
+        return 'last quarter';
+      case 'last6Months':
+        return 'last 6 months';
+      case 'lastYear':
+        return 'last year';
+      default:
+        return 'last 6 months';
+    }
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -121,7 +139,7 @@ export default function SearchConsolePage() {
             Back to Dashboard
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Google Search Console</h1>
-          <p className="text-gray-600 mt-2">Detailed search performance for the last 6 months</p>
+          <p className="text-gray-600 mt-2">Detailed search performance for the {getDateRangeDisplayText()}</p>
         </div>
 
         {/* Summary Cards */}
