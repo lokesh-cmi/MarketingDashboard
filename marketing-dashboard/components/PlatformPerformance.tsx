@@ -67,10 +67,10 @@ export default function PlatformPerformance({ platform, bgColor, icon }: Platfor
   const getGradientId = () => `color${platform}`;
   const getGradientColors = () => {
     switch (platform) {
-      case 'LinkedIn': return { start: '#0077B5', end: '#0077B5' };
-      case 'Instagram': return { start: '#C13584', end: '#E1306C' };
-      case 'Facebook': return { start: '#1877F2', end: '#1877F2' };
-      case 'Twitter': return { start: '#1DA1F2', end: '#1DA1F2' };
+      case 'LinkedIn': return { start: '#9333ea', end: '#9333ea' };      // purple-600
+      case 'Instagram': return { start: '#a855f7', end: '#c084fc' };    // purple-500 to purple-400
+      case 'Facebook': return { start: '#7c3aed', end: '#7c3aed' };     // purple-700
+      case 'Twitter': return { start: '#8b5cf6', end: '#8b5cf6' };      // purple-500
     }
   };
 
@@ -89,35 +89,35 @@ export default function PlatformPerformance({ platform, bgColor, icon }: Platfor
       </div>
 
       <div className="grid grid-cols-5 gap-4 mb-6">
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
           <div className="text-sm text-gray-600 mb-1">Followers</div>
           <div className="text-2xl font-bold text-gray-900">{formatNumber(data.metrics.followers.value)}</div>
           <div className={`text-xs mt-1 ${data.metrics.followers.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {data.metrics.followers.change >= 0 ? '↑' : '↓'} {Math.abs(data.metrics.followers.change).toFixed(1)}%
           </div>
         </div>
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
           <div className="text-sm text-gray-600 mb-1">Impressions</div>
           <div className="text-2xl font-bold text-gray-900">{formatNumber(data.metrics.impressions.value)}</div>
           <div className={`text-xs mt-1 ${data.metrics.impressions.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {data.metrics.impressions.change >= 0 ? '↑' : '↓'} {Math.abs(data.metrics.impressions.change).toFixed(1)}%
           </div>
         </div>
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
           <div className="text-sm text-gray-600 mb-1">Engagement</div>
           <div className="text-2xl font-bold text-gray-900">{formatNumber(data.metrics.engagement.value)}</div>
           <div className={`text-xs mt-1 ${data.metrics.engagement.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {data.metrics.engagement.change >= 0 ? '↑' : '↓'} {Math.abs(data.metrics.engagement.change).toFixed(1)}%
           </div>
         </div>
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
           <div className="text-sm text-gray-600 mb-1">Clicks</div>
           <div className="text-2xl font-bold text-gray-900">{formatNumber(data.metrics.clicks.value)}</div>
           <div className={`text-xs mt-1 ${data.metrics.clicks.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {data.metrics.clicks.change >= 0 ? '↑' : '↓'} {Math.abs(data.metrics.clicks.change).toFixed(1)}%
           </div>
         </div>
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
           <div className="text-sm text-gray-600 mb-1">
             {platform === 'LinkedIn' ? 'Shares' : 
              platform === 'Instagram' ? 'Saves' :
