@@ -83,11 +83,11 @@ export default function HubSpotPage() {
           <div className="grid grid-cols-2 gap-8 mb-8">
             <div className="text-center">
               <div className="text-sm text-gray-600 mb-2">(COUNT) DEALS</div>
-              <div className="text-5xl font-bold text-cyan-600">{dealsData.totalDeals}</div>
+              <div className="text-5xl font-bold text-purple-600">{dealsData.totalDeals}</div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-600 mb-2">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-              <div className="text-3xl font-bold text-cyan-600">{formatCurrency(dealsData.totalAmount)}</div>
+              <div className="text-3xl font-bold text-purple-600">{formatCurrency(dealsData.totalAmount)}</div>
             </div>
           </div>
 
@@ -102,11 +102,11 @@ export default function HubSpotPage() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(COUNT) DEALS</div>
-                  <div className="text-4xl font-bold text-cyan-600">{dealsBreakdown.active.count}</div>
+                  <div className="text-4xl font-bold text-purple-600">{dealsBreakdown.active.count}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-                  <div className="text-xl font-bold text-cyan-600">{dealsBreakdown.active.amount}</div>
+                  <div className="text-xl font-bold text-purple-600">{dealsBreakdown.active.amount}</div>
                 </div>
               </div>
             </div>
@@ -121,11 +121,11 @@ export default function HubSpotPage() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(COUNT) DEALS</div>
-                  <div className="text-4xl font-bold text-cyan-600">{dealsBreakdown.lost.count}</div>
+                  <div className="text-4xl font-bold text-purple-600">{dealsBreakdown.lost.count}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-                  <div className="text-xl font-bold text-cyan-600">{dealsBreakdown.lost.amount}</div>
+                  <div className="text-xl font-bold text-purple-600">{dealsBreakdown.lost.amount}</div>
                 </div>
               </div>
             </div>
@@ -140,11 +140,11 @@ export default function HubSpotPage() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(COUNT) DEALS</div>
-                  <div className="text-4xl font-bold text-cyan-600">{dealsBreakdown.won.count}</div>
+                  <div className="text-4xl font-bold text-purple-600">{dealsBreakdown.won.count}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-600 mb-1">(SUM) AMOUNT IN COMPANY CURRENCY</div>
-                  <div className="text-xl font-bold text-cyan-600">{dealsBreakdown.won.amount}</div>
+                  <div className="text-xl font-bold text-purple-600">{dealsBreakdown.won.amount}</div>
                 </div>
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function HubSpotPage() {
                   formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
                 />
-                <Bar dataKey="amount" fill="#7C3AED" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="amount" fill="#9333ea" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -218,7 +218,7 @@ export default function HubSpotPage() {
                   formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
                 />
-                <Bar dataKey="amount" fill="#EC4899" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="amount" fill="#a855f7" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

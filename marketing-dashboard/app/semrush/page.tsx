@@ -109,7 +109,7 @@ export default function SEMrushPage() {
                         <Line 
                           type="monotone" 
                           dataKey="value" 
-                          stroke="#F97316" 
+                          stroke="#9333ea" 
                           strokeWidth={2}
                           dot={false}
                         />
@@ -270,7 +270,7 @@ export default function SEMrushPage() {
                   <Area 
                     type="monotone" 
                     dataKey="visibility" 
-                    stroke="#60A5FA" 
+                    stroke="#9333ea" 
                     strokeWidth={2}
                     fill="url(#visibilityGradient)"
                   />
@@ -397,7 +397,7 @@ export default function SEMrushPage() {
                       cx="64"
                       cy="64"
                       r="56"
-                      stroke="#84CC16"
+                      stroke="#9333ea"
                       strokeWidth="12"
                       fill="none"
                       strokeDasharray={`${(data.siteHealth.score / 100) * 351.86} 351.86`}

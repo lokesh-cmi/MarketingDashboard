@@ -160,7 +160,7 @@ export default function LinkedInAdsPage() {
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
                 <AreaChart data={adSpendMiniData}>
-                  <Area type="monotone" dataKey="value" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+                  <Area type="monotone" dataKey="value" stroke="#9333ea" fill="#9333ea" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -179,7 +179,7 @@ export default function LinkedInAdsPage() {
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
                 <AreaChart data={avgCpcMiniData}>
-                  <Area type="monotone" dataKey="value" stroke="#EF4444" fill="#EF4444" fillOpacity={0.3} />
+                  <Area type="monotone" dataKey="value" stroke="#a855f7" fill="#a855f7" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -198,7 +198,7 @@ export default function LinkedInAdsPage() {
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
                 <AreaChart data={paidCtrMiniData}>
-                  <Area type="monotone" dataKey="value" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+                  <Area type="monotone" dataKey="value" stroke="#9333ea" fill="#9333ea" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -217,7 +217,7 @@ export default function LinkedInAdsPage() {
             <div className="mt-2">
               <ResponsiveContainer width="100%" height={50}>
                 <AreaChart data={organicCtrMiniData}>
-                  <Area type="monotone" dataKey="value" stroke="#EF4444" fill="#EF4444" fillOpacity={0.3} />
+                  <Area type="monotone" dataKey="value" stroke="#c084fc" fill="#c084fc" fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
