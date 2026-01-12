@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import ChartTypeSwitcher, { ChartType } from '@/components/ChartTypeSwitcher';
 
 // Mock data for clicks over time (line chart)
 const clicksOverTimeData = [
@@ -89,6 +90,8 @@ export default function GoogleAdsPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'paid-campaigns';
   const [searchQuery, setSearchQuery] = useState('');
+  const [clicksChartType, setClicksChartType] = useState<ChartType>('line');
+  const [leadsChartType, setLeadsChartType] = useState<ChartType>('bar');
 
   // Filter campaigns based on search query
   const filteredCampaigns = campaignsData.filter(campaign =>
@@ -122,34 +125,91 @@ export default function GoogleAdsPage() {
                 <div className="text-3xl font-bold text-gray-900 mt-2">407</div>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={clicksOverTimeData}>
-                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
-                <XAxis 
-                  dataKey="date" 
-                  tick={{ fontSize: 11, fill: '#999' }} 
-                  axisLine={{ stroke: '#e5e7eb' }}
-                  tickLine={false}
-                  interval={3}
-                />
-                <YAxis 
-                  tick={{ fontSize: 11, fill: '#999' }} 
-                  axisLine={false}
-                  tickLine={false}
-                  domain={[0, 20]}
-                />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="clicks" 
-                  stroke="#4285F4" 
-                  strokeWidth={2} 
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="relative">
+              <ChartTypeSwitcher
+                currentType={clicksChartType}
+                availableTypes={['line', 'bar', 'area']}
+                onTypeChange={setClicksChartType}
+              />
+              <ResponsiveContainer width="100%" height={200}>
+                {clicksChartType === 'bar' ? (
+                  <BarChart data={clicksOverTimeData}>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={3}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 20]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                    />
+                    <Bar dataKey="clicks" fill="#9333ea" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                ) : clicksChartType === 'area' ? (
+                  <AreaChart data={clicksOverTimeData}>
+                    <defs>
+                      <linearGradient id="colorClicksGoogle" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={3}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 20]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                    />
+                    <Area type="monotone" dataKey="clicks" stroke="#9333ea" fill="url(#colorClicksGoogle)" />
+                  </AreaChart>
+                ) : (
+                  <LineChart data={clicksOverTimeData}>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={3}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 20]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="clicks" 
+                      stroke="#9333ea" 
+                      strokeWidth={2} 
+                      dot={false}
+                    />
+                  </LineChart>
+                )}
+              </ResponsiveContainer>
+            </div>
           </div>
 
           {/* Leads by Campaign - Bar Chart */}
@@ -160,37 +220,102 @@ export default function GoogleAdsPage() {
                 <div className="text-3xl font-bold text-gray-900 mt-2">236</div>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={leadsByCampaignData}>
-                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
-                <XAxis 
-                  dataKey="campaign" 
-                  tick={{ fontSize: 9, fill: '#999' }} 
-                  axisLine={{ stroke: '#e5e7eb' }}
-                  tickLine={false}
-                  interval={0}
-                  angle={0}
-                  textAnchor="middle"
-                  height={50}
-                />
-                <YAxis 
-                  tick={{ fontSize: 11, fill: '#999' }} 
-                  axisLine={false}
-                  tickLine={false}
-                  domain={[0, 80]}
-                />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
-                  formatter={(value) => [`${value}`, 'Leads']}
-                />
-                <Bar 
-                  dataKey="leads" 
-                  fill="#4285F4" 
-                  radius={[4, 4, 0, 0]}
-                  barSize={40}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="relative">
+              <ChartTypeSwitcher
+                currentType={leadsChartType}
+                availableTypes={['bar', 'line', 'area']}
+                onTypeChange={setLeadsChartType}
+              />
+              <ResponsiveContainer width="100%" height={220}>
+                {leadsChartType === 'line' ? (
+                  <LineChart data={leadsByCampaignData}>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="campaign" 
+                      tick={{ fontSize: 9, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={0}
+                      angle={0}
+                      textAnchor="middle"
+                      height={50}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 80]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                      formatter={(value) => [`${value}`, 'Leads']}
+                    />
+                    <Line type="monotone" dataKey="leads" stroke="#9333ea" strokeWidth={2} dot={{ r: 4 }} />
+                  </LineChart>
+                ) : leadsChartType === 'area' ? (
+                  <AreaChart data={leadsByCampaignData}>
+                    <defs>
+                      <linearGradient id="colorLeadsGoogle" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#9333ea" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="campaign" 
+                      tick={{ fontSize: 9, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={0}
+                      angle={0}
+                      textAnchor="middle"
+                      height={50}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 80]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                      formatter={(value) => [`${value}`, 'Leads']}
+                    />
+                    <Area type="monotone" dataKey="leads" stroke="#9333ea" fill="url(#colorLeadsGoogle)" />
+                  </AreaChart>
+                ) : (
+                  <BarChart data={leadsByCampaignData}>
+                    <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="campaign" 
+                      tick={{ fontSize: 9, fill: '#999' }} 
+                      axisLine={{ stroke: '#e5e7eb' }}
+                      tickLine={false}
+                      interval={0}
+                      angle={0}
+                      textAnchor="middle"
+                      height={50}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 11, fill: '#999' }} 
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 80]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }}
+                      formatter={(value) => [`${value}`, 'Leads']}
+                    />
+                    <Bar 
+                      dataKey="leads" 
+                      fill="#9333ea" 
+                      radius={[4, 4, 0, 0]}
+                      barSize={40}
+                    />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 

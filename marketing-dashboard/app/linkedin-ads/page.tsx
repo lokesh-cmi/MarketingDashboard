@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
+import ChartTypeSwitcher, { ChartType } from '@/components/ChartTypeSwitcher';
 
 // Mini chart data for metric cards - showing realistic trends matching percentage changes
 const adSpendMiniData = [
@@ -122,6 +123,8 @@ const postToClickData = [
 export default function LinkedInAdsPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'paid-campaigns';
+  const [adToClickChartType, setAdToClickChartType] = useState<ChartType>('area');
+  const [postToClickChartType, setPostToClickChartType] = useState<ChartType>('area');
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -244,67 +247,160 @@ export default function LinkedInAdsPage() {
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={adToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorVideo" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#1E3A8A" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorMessage" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorUpdate" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#BFDBFE" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#BFDBFE" stopOpacity={0.3}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
-              <XAxis 
-                dataKey="day" 
-                tick={{ fontSize: 12, fill: '#999' }} 
-                axisLine={{ stroke: '#f0f0f0' }}
-                tickLine={false}
-              />
-              <YAxis 
-                tick={{ fontSize: 12, fill: '#999' }} 
-                axisLine={false}
-                tickLine={false}
-              />
-              <Tooltip 
-                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-              />
-              <Legend 
-                wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
-                iconType="circle"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="sponsoredVideo" 
-                stackId="1" 
-                stroke="#1E3A8A" 
-                fill="url(#colorVideo)" 
-                name="Sponsored Video"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="sponsoredMessage" 
-                stackId="1" 
-                stroke="#60A5FA" 
-                fill="url(#colorMessage)" 
-                name="Sponsored Message"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="sponsoredUpdate" 
-                stackId="1" 
-                stroke="#BFDBFE" 
-                fill="url(#colorUpdate)" 
-                name="Sponsored Status Update"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className="relative">
+            <ChartTypeSwitcher
+              currentType={adToClickChartType}
+              availableTypes={['area', 'line', 'bar']}
+              onTypeChange={setAdToClickChartType}
+            />
+
+            <ResponsiveContainer width="100%" height={280}>
+              {adToClickChartType === 'line' ? (
+                <LineChart data={adToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="sponsoredVideo" 
+                    stroke="#1E3A8A" 
+                    strokeWidth={2}
+                    name="Sponsored Video"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="sponsoredMessage" 
+                    stroke="#60A5FA" 
+                    strokeWidth={2}
+                    name="Sponsored Message"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="sponsoredUpdate" 
+                    stroke="#BFDBFE" 
+                    strokeWidth={2}
+                    name="Sponsored Status Update"
+                  />
+                </LineChart>
+              ) : adToClickChartType === 'bar' ? (
+                <BarChart data={adToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Bar 
+                    dataKey="sponsoredVideo" 
+                    stackId="1" 
+                    fill="#1E3A8A" 
+                    name="Sponsored Video"
+                  />
+                  <Bar 
+                    dataKey="sponsoredMessage" 
+                    stackId="1" 
+                    fill="#60A5FA" 
+                    name="Sponsored Message"
+                  />
+                  <Bar 
+                    dataKey="sponsoredUpdate" 
+                    stackId="1" 
+                    fill="#BFDBFE" 
+                    name="Sponsored Status Update"
+                  />
+                </BarChart>
+              ) : (
+                <AreaChart data={adToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorVideo" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#1E3A8A" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorMessage" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#60A5FA" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorUpdate" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#BFDBFE" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#BFDBFE" stopOpacity={0.3}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="sponsoredVideo" 
+                    stackId="1" 
+                    stroke="#1E3A8A" 
+                    fill="url(#colorVideo)" 
+                    name="Sponsored Video"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="sponsoredMessage" 
+                    stackId="1" 
+                    stroke="#60A5FA" 
+                    fill="url(#colorMessage)" 
+                    name="Sponsored Message"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="sponsoredUpdate" 
+                    stackId="1" 
+                    stroke="#BFDBFE" 
+                    fill="url(#colorUpdate)" 
+                    name="Sponsored Status Update"
+                  />
+                </AreaChart>
+              )}
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Post to Click Section */}
@@ -330,103 +426,127 @@ export default function LinkedInAdsPage() {
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorGif" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorGallery" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorImage" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#84CC16" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#84CC16" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorLink" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#EAB308" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#EAB308" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorText" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F97316" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#F97316" stopOpacity={0.3}/>
-                </linearGradient>
-                <linearGradient id="colorVideo" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#DC2626" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#DC2626" stopOpacity={0.3}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
-              <XAxis 
-                dataKey="day" 
-                tick={{ fontSize: 12, fill: '#999' }} 
-                axisLine={{ stroke: '#f0f0f0' }}
-                tickLine={false}
-              />
-              <YAxis 
-                tick={{ fontSize: 12, fill: '#999' }} 
-                axisLine={false}
-                tickLine={false}
-              />
-              <Tooltip 
-                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-              />
-              <Legend 
-                wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
-                iconType="circle"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="gif" 
-                stackId="1" 
-                stroke="#3B82F6" 
-                fill="url(#colorGif)" 
-                name="GIF"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="gallery" 
-                stackId="1" 
-                stroke="#06B6D4" 
-                fill="url(#colorGallery)" 
-                name="Gallery"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="image" 
-                stackId="1" 
-                stroke="#84CC16" 
-                fill="url(#colorImage)" 
-                name="Image"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="link" 
-                stackId="1" 
-                stroke="#EAB308" 
-                fill="url(#colorLink)" 
-                name="Link"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="text" 
-                stackId="1" 
-                stroke="#F97316" 
-                fill="url(#colorText)" 
-                name="Text"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="video" 
-                stackId="1" 
-                stroke="#DC2626" 
-                fill="url(#colorVideo)" 
-                name="Video"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className="relative">
+            <ChartTypeSwitcher
+              currentType={postToClickChartType}
+              availableTypes={['area', 'line', 'bar']}
+              onTypeChange={setPostToClickChartType}
+            />
+
+            <ResponsiveContainer width="100%" height={280}>
+              {postToClickChartType === 'line' ? (
+                <LineChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Line type="monotone" dataKey="gif" stroke="#3B82F6" strokeWidth={2} name="GIF" />
+                  <Line type="monotone" dataKey="gallery" stroke="#06B6D4" strokeWidth={2} name="Gallery" />
+                  <Line type="monotone" dataKey="image" stroke="#84CC16" strokeWidth={2} name="Image" />
+                  <Line type="monotone" dataKey="link" stroke="#EAB308" strokeWidth={2} name="Link" />
+                  <Line type="monotone" dataKey="text" stroke="#F97316" strokeWidth={2} name="Text" />
+                  <Line type="monotone" dataKey="video" stroke="#DC2626" strokeWidth={2} name="Video" />
+                </LineChart>
+              ) : postToClickChartType === 'bar' ? (
+                <BarChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Bar dataKey="gif" stackId="1" fill="#3B82F6" name="GIF" />
+                  <Bar dataKey="gallery" stackId="1" fill="#06B6D4" name="Gallery" />
+                  <Bar dataKey="image" stackId="1" fill="#84CC16" name="Image" />
+                  <Bar dataKey="link" stackId="1" fill="#EAB308" name="Link" />
+                  <Bar dataKey="text" stackId="1" fill="#F97316" name="Text" />
+                  <Bar dataKey="video" stackId="1" fill="#DC2626" name="Video" />
+                </BarChart>
+              ) : (
+                <AreaChart data={postToClickData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorGif" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorGallery" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorImage" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#84CC16" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#84CC16" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorLink" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#EAB308" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#EAB308" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorText" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#F97316" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#F97316" stopOpacity={0.3}/>
+                    </linearGradient>
+                    <linearGradient id="colorVideoPost" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#DC2626" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#DC2626" stopOpacity={0.3}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={true} horizontal={false} />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={{ stroke: '#f0f0f0' }}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#999' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: 12, paddingTop: 20 }}
+                    iconType="circle"
+                  />
+                  <Area type="monotone" dataKey="gif" stackId="1" stroke="#3B82F6" fill="url(#colorGif)" name="GIF" />
+                  <Area type="monotone" dataKey="gallery" stackId="1" stroke="#06B6D4" fill="url(#colorGallery)" name="Gallery" />
+                  <Area type="monotone" dataKey="image" stackId="1" stroke="#84CC16" fill="url(#colorImage)" name="Image" />
+                  <Area type="monotone" dataKey="link" stackId="1" stroke="#EAB308" fill="url(#colorLink)" name="Link" />
+                  <Area type="monotone" dataKey="text" stackId="1" stroke="#F97316" fill="url(#colorText)" name="Text" />
+                  <Area type="monotone" dataKey="video" stackId="1" stroke="#DC2626" fill="url(#colorVideoPost)" name="Video" />
+                </AreaChart>
+              )}
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>

@@ -43,6 +43,7 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<DetailedAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeDeviceIndex, setActiveDeviceIndex] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -117,7 +118,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Traffic & Acquisition */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-6">
+        <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">Traffic & Acquisition</h1>
           
           <div className="grid grid-cols-2 gap-8">
@@ -177,31 +178,38 @@ export default function AnalyticsPage() {
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Most popular pages</h2>
               
-              <div className="overflow-auto max-h-[350px]">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 bg-white">
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs">Top pages</th>
-                      <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs">Link</th>
-                      <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs">Views ▼</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.popularPages.map((page, index) => (
-                      <tr key={index} className="border-b border-gray-100 hover:bg-purple-50">
-                        <td className="py-2 px-2 text-gray-900 text-xs">{index + 1}.</td>
-                        <td className="py-2 px-2 text-blue-600 text-xs truncate max-w-xs">{page.path}</td>
-                        <td className="py-2 px-2 text-gray-900 text-right text-xs font-medium">{formatNumber(page.views)}</td>
+              <div className="relative border border-gray-200 rounded-lg overflow-hidden">
+                <div className="overflow-auto max-h-[350px]">
+                  <table className="w-full text-sm">
+                    <thead className="sticky top-0 bg-white z-10">
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Top pages</th>
+                        <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Link</th>
+                        <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Views ▼</th>
                       </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="border-t-2 border-gray-300 font-semibold">
-                      <td colSpan={2} className="py-2 px-2 text-gray-900 text-xs">Grand total</td>
-                      <td className="py-2 px-2 text-gray-900 text-right text-xs">{formatNumber(data.summary.totalPageViews)}</td>
-                    </tr>
-                  </tfoot>
-                </table>
+                    </thead>
+                    <tbody>
+                      {data.popularPages.map((page, index) => (
+                        <tr key={index} className="border-b border-gray-100 hover:bg-purple-50 transition-colors">
+                          <td className="py-2 px-2 text-gray-900 text-xs">{index + 1}.</td>
+                          <td className="py-2 px-2 text-blue-600 text-xs truncate max-w-xs">{page.path}</td>
+                          <td className="py-2 px-2 text-gray-900 text-right text-xs font-medium">{formatNumber(page.views)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Sticky Grand Total */}
+                <div className="sticky bottom-0 bg-white border-t-2 border-gray-300">
+                  <table className="w-full text-sm">
+                    <tbody>
+                      <tr className="font-semibold">
+                        <td colSpan={2} className="py-2 px-2 text-xs text-gray-900">Grand total</td>
+                        <td className="py-2 px-2 text-xs text-gray-900 text-right">{formatNumber(data.summary.totalPageViews)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -211,95 +219,163 @@ export default function AnalyticsPage() {
             {/* Traffic per Country */}
             <div>
               <h3 className="text-md font-semibold text-gray-900 mb-4">Traffic per country</h3>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-2 text-xs font-semibold text-gray-700">Country</th>
-                    <th className="text-right py-2 text-xs font-semibold text-gray-700">Users ▼</th>
-                    <th className="text-right py-2 text-xs font-semibold text-gray-700">% of all</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.trafficByCountry.slice(0, 10).map((country, index) => (
-                    <tr key={index} className="border-b border-gray-100">
-                      <td className="py-2 text-xs text-gray-900">{index + 1}. {country.country}</td>
-                      <td className="py-2 text-xs text-gray-900 text-right">{formatNumber(country.users)}</td>
-                      <td className="py-2 text-xs text-gray-900 text-right">{country.percentage.toFixed(2)}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="border-t-2 border-gray-300 font-semibold">
-                    <td className="py-2 text-xs text-gray-900">Grand total</td>
-                    <td className="py-2 text-xs text-gray-900 text-right">{formatNumber(data.summary.totalUsers)}</td>
-                    <td className="py-2 text-xs text-gray-900 text-right">100%</td>
-                  </tr>
-                </tfoot>
-              </table>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="overflow-auto max-h-[300px]">
+                  <table className="w-full text-sm">
+                    <thead className="sticky top-0 bg-white z-10">
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Country</th>
+                        <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Users ▼</th>
+                        <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs bg-white">% of all</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.trafficByCountry.slice(0, 10).map((country, index) => (
+                        <tr key={index} className="border-b border-gray-100 hover:bg-purple-50 transition-colors">
+                          <td className="py-2 px-2 text-xs text-gray-900">{index + 1}. {country.country}</td>
+                          <td className="py-2 px-2 text-xs text-gray-900 text-right">{formatNumber(country.users)}</td>
+                          <td className="py-2 px-2 text-xs text-gray-900 text-right">{country.percentage.toFixed(2)}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Sticky Grand Total */}
+                <div className="sticky bottom-0 bg-white border-t-2 border-gray-300">
+                  <table className="w-full text-sm">
+                    <tbody>
+                      <tr className="font-semibold">
+                        <td className="py-2 px-2 text-xs text-gray-900">Grand total</td>
+                        <td className="py-2 px-2 text-xs text-gray-900 text-right">{formatNumber(data.summary.totalUsers)}</td>
+                        <td className="py-2 px-2 text-xs text-gray-900 text-right">100%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
             {/* Traffic per Device */}
-            <div>
+            <div className="flex flex-col">
               <h3 className="text-md font-semibold text-gray-900 mb-4">Traffic per device</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={deviceChartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {deviceChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={DEVICE_COLORS[entry.name.toLowerCase()] || '#8b5cf6'} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value: number | undefined) => value !== undefined ? formatNumber(value) : ''} />
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value, entry: any) => `${value} (${entry.payload.percentage.toFixed(1)}%)`}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="border border-gray-200 rounded-lg p-4 flex items-center justify-center bg-gradient-to-br from-purple-50/20 to-white">
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={deviceChartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={90}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {deviceChartData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={DEVICE_COLORS[entry.name.toLowerCase()] || '#8b5cf6'}
+                          style={{
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            opacity: activeDeviceIndex === null || activeDeviceIndex === index ? 1 : 0.5,
+                            filter: activeDeviceIndex === index ? 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.4))' : 'none',
+                            transform: activeDeviceIndex === index ? 'scale(1.05)' : 'scale(1)',
+                            transformOrigin: 'center'
+                          }}
+                          onMouseEnter={() => setActiveDeviceIndex(index)}
+                          onMouseLeave={() => setActiveDeviceIndex(null)}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: number | undefined, name: string | undefined, props: any) => {
+                        if (value === undefined || !name) return '';
+                        const percentage = props.payload?.percentage || 0;
+                        return [
+                          `${formatNumber(value)} sessions (${percentage.toFixed(1)}%)`,
+                          props.payload?.name || name
+                        ];
+                      }}
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        padding: '12px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                      }}
+                      labelStyle={{ 
+                        marginBottom: '6px', 
+                        fontWeight: 600,
+                        color: '#374151'
+                      }}
+                    />
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={36}
+                      formatter={(value, entry: any) => `${value} (${entry.payload.percentage.toFixed(1)}%)`}
+                      wrapperStyle={{
+                        fontSize: '12px',
+                        paddingTop: '10px',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(entry: any) => {
+                        const index = deviceChartData.findIndex((item: any) => item.name === entry.value);
+                        if (index !== -1) setActiveDeviceIndex(index);
+                      }}
+                      onMouseLeave={() => setActiveDeviceIndex(null)}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
             {/* Traffic Source */}
             <div>
               <h3 className="text-md font-semibold text-gray-900 mb-4">Traffic source</h3>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-2 text-xs font-semibold text-gray-700">Source</th>
-                    <th className="text-right py-2 text-xs font-semibold text-gray-700">Sessions ▼</th>
-                    <th className="text-right py-2 text-xs font-semibold text-gray-700">% of all</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.trafficSources.slice(0, 10).map((source, index) => (
-                    <tr key={index} className="border-b border-gray-100">
-                      <td className="py-2 text-xs text-gray-900">{index + 1}. {source.source}</td>
-                      <td className="py-2 text-xs text-gray-900 text-right">{formatNumber(source.sessions)}</td>
-                      <td className="py-2 text-xs text-gray-900 text-right">{source.percentage.toFixed(2)}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="border-t-2 border-gray-300 font-semibold">
-                    <td className="py-2 text-xs text-gray-900">Grand total</td>
-                    <td className="py-2 text-xs text-gray-900 text-right">{formatNumber(data.summary.totalSessions)}</td>
-                    <td className="py-2 text-xs text-gray-900 text-right">100%</td>
-                  </tr>
-                </tfoot>
-              </table>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="overflow-auto max-h-[300px]">
+                  <table className="w-full text-sm">
+                    <thead className="sticky top-0 bg-white z-10">
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Source</th>
+                        <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs bg-white">Sessions ▼</th>
+                        <th className="text-right py-2 px-2 font-semibold text-gray-700 text-xs bg-white">% of all</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.trafficSources.slice(0, 10).map((source, index) => (
+                        <tr key={index} className="border-b border-gray-100 hover:bg-purple-50 transition-colors">
+                          <td className="py-2 px-2 text-xs text-gray-900">{index + 1}. {source.source}</td>
+                          <td className="py-2 px-2 text-xs text-gray-900 text-right">{formatNumber(source.sessions)}</td>
+                          <td className="py-2 px-2 text-xs text-gray-900 text-right">{source.percentage.toFixed(2)}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Sticky Grand Total */}
+                <div className="sticky bottom-0 bg-white border-t-2 border-gray-300">
+                  <table className="w-full text-sm">
+                    <tbody>
+                      <tr className="font-semibold">
+                        <td className="py-2 px-2 text-xs text-gray-900">Grand total</td>
+                        <td className="py-2 px-2 text-xs text-gray-900 text-right">{formatNumber(data.summary.totalSessions)}</td>
+                        <td className="py-2 px-2 text-xs text-gray-900 text-right">100%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Divider */}
+        <div className="border-t-2 border-gray-300 my-8"></div>
+
         {/* Engagement */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8">
+        <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Engagement</h2>
           
           <div className="grid grid-cols-5 gap-4">
