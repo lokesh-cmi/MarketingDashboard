@@ -1,8 +1,13 @@
 'use client';
 
 import { useDateRange, DateRange } from '@/contexts/DateRangeContext';
+import { MessageSquare } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  onOpenAIAssistant?: () => void;
+}
+
+export default function Header({ onOpenAIAssistant }: HeaderProps) {
   const { dateRange, setDateRange } = useDateRange();
 
   const handleDateRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -20,8 +25,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-4">
+        {/* Filters and AI Assistant */}
+        <div className="flex gap-4 items-center">
           <select 
             value={dateRange}
             onChange={handleDateRangeChange}
@@ -33,6 +38,15 @@ export default function Header() {
             <option>Last 6 Months</option>
             <option>Last Year</option>
           </select>
+          
+          {/* AI Assistant Button */}
+          <button
+            onClick={onOpenAIAssistant}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all shadow-lg hover:shadow-xl"
+          >
+            <MessageSquare size={18} />
+            Talk to us
+          </button>
         </div>
       </div>
     </header>
